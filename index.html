@@ -1,0 +1,3004 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Silsilah Keluarga Nusantara - Gim Edukasi Anak SD</title>
+    <style>
+        /* ==========================================================================
+           1. RESET & VARIABEL DESAIN (100% OFFLINE TANPA CDN EKSTERNAL)
+           ========================================================================== */
+        :root {
+            --bg-outer: #1b262c;
+            --bg-stage: #fdf6e9;
+            --bg-panel: #fffdf9;
+            --wood-dark: #6d4021;
+            --wood-mid: #8e562e;
+            --wood-light: #b87a4b;
+            --accent-red: #d94e34;
+            --accent-gold: #f59e0b;
+            --accent-green: #16a34a;
+            --accent-blue: #0284c7;
+            --accent-purple: #7c3aed;
+            --text-main: #2d1e12;
+            --text-muted: #6e5a49;
+            --border-warm: #e4d2b8;
+            --font-kids: 'Segoe UI', 'Chalkboard SE', 'Comic Sans MS', 'Trebuchet MS', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--bg-outer);
+            font-family: var(--font-kids);
+            color: var(--text-main);
+        }
+
+        /* ==========================================================================
+           2. PEMBUNGKUS RASIO TETAP 16:9 (1280 x 720 VIRTUAL RESOLUTION)
+           ========================================================================== */
+        #viewport {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #2c3e50 0%, #0f171e 100%);
+            overflow: hidden;
+        }
+
+        #stage {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            background-color: var(--bg-stage);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), inset 0 0 0 6px var(--wood-mid);
+            overflow: hidden;
+            transform-origin: center center;
+            flex-shrink: 0;
+        }
+
+        /* Ornamen Batik Geometris Halus pada Latar */
+        .batik-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.06;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(circle at 20px 20px, var(--wood-dark) 3px, transparent 4px),
+                radial-gradient(circle at 0px 0px, var(--wood-dark) 2px, transparent 3px),
+                radial-gradient(circle at 40px 0px, var(--wood-dark) 2px, transparent 3px),
+                radial-gradient(circle at 0px 40px, var(--wood-dark) 2px, transparent 3px),
+                radial-gradient(circle at 40px 40px, var(--wood-dark) 2px, transparent 3px);
+            background-size: 40px 40px;
+        }
+
+        /* Sistem Layar (Screens) */
+        .screen {
+            position: absolute;
+            inset: 6px;
+            display: none;
+            flex-direction: column;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeInScreen 0.25s ease-out;
+        }
+
+        @keyframes fadeInScreen {
+            from { opacity: 0; transform: scale(0.99); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ==========================================================================
+           3. KOMPONEN TOMBOL & LENCANA UMUM
+           ========================================================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: var(--font-kids);
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            border-radius: 14px;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+            position: relative;
+        }
+
+        .btn:hover {
+            filter: brightness(1.06);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #ff7b54 0%, #d94e34 100%);
+            color: #fff;
+            box-shadow: 0 5px 0 #9b301c, 0 8px 15px rgba(217, 78, 52, 0.3);
+            border: 2px solid #ffab91;
+        }
+        .btn-primary:active { box-shadow: 0 1px 0 #9b301c; }
+
+        .btn-green {
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            color: #fff;
+            box-shadow: 0 5px 0 #0f5326, 0 8px 15px rgba(22, 163, 74, 0.3);
+            border: 2px solid #86efac;
+        }
+        .btn-green:active { box-shadow: 0 1px 0 #0f5326; }
+
+        .btn-gold {
+            background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+            color: #3b2106;
+            box-shadow: 0 5px 0 #92400e, 0 8px 15px rgba(245, 158, 11, 0.3);
+            border: 2px solid #fde68a;
+        }
+        .btn-gold:active { box-shadow: 0 1px 0 #92400e; }
+
+        .btn-kamus {
+            width: 240px;
+            height: 72px;
+            padding: 0;
+            overflow: hidden;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            align-self: center;
+            margin-top: 0;
+        }
+
+        .btn-kamus img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .menu-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 6px;
+            align-items: flex-start;
+        }
+
+        .btn-blue {
+            background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+            color: #fff;
+            box-shadow: 0 5px 0 #075985, 0 8px 15px rgba(2, 132, 199, 0.25);
+            border: 2px solid #bae6fd;
+        }
+        .btn-blue:active { box-shadow: 0 1px 0 #075985; }
+
+        .btn-cara {
+            width: 200px;
+            height: 52px;
+            padding: 0;
+            overflow: hidden;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .btn-cara img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .btn-wood {
+            background: linear-gradient(180deg, #a4683b 0%, #734422 100%);
+            color: #fff8ed;
+            box-shadow: 0 5px 0 #4a2a12, 0 6px 12px rgba(0, 0, 0, 0.2);
+            border: 2px solid #d19b70;
+        }
+        .btn-wood:active { box-shadow: 0 1px 0 #4a2a12; }
+
+        .btn-icon {
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            border-radius: 12px;
+        }
+
+        .btn-info {
+            width: 46px;
+            height: 46px;
+            min-width: 46px;
+            min-height: 46px;
+            padding: 0;
+            border-radius: 12px;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        /* ==========================================================================
+           4. LAYAR 1: MENU UTAMA (16:9)
+           ========================================================================== */
+        #screen-menu {
+            background-image: url('assets/latar.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            align-items: center;
+            justify-content: space-between;
+            padding: 28px 48px;
+        }
+
+        .menu-top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .nusantara-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            padding: 8px 18px;
+            border-radius: 999px;
+            border: 3px solid var(--wood-light);
+            font-weight: 800;
+            color: var(--wood-dark);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            font-size: 15px;
+        }
+
+        .menu-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1140px;
+            gap: 36px;
+            z-index: 2;
+            margin: auto 0;
+        }
+
+        .menu-left {
+            flex: 1.08;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .game-title-box {
+            width: 100%;
+            max-width: 620px;
+            height: auto;
+            background: transparent;
+            border: none;
+            border-radius: 24px;
+            padding: 0;
+            box-shadow: none;
+            position: relative;
+        }
+
+        .game-title-box img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 620px;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
+            background: transparent;
+        }
+
+        .game-subtitle-tag {
+            display: none;
+        }
+
+        .game-title-box h1,
+        .game-title-box p {
+            display: none;
+        }
+
+        .menu-actions {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 6px;
+            width: 100%;
+            max-width: 620px;
+        }
+
+        .btn-big-play {
+            font-size: 24px;
+            padding: 0;
+            width: 240px;
+            height: 72px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .btn-big-play img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
+        .menu-right {
+            flex: 0.8;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            min-width: 0;
+            margin-top: -34px;
+        }
+
+        .family-figure {
+            display: block;
+            width: 100%;
+            max-width: 645px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 18px rgba(67, 41, 24, 0.16));
+        }
+
+        .menu-preview-tree {
+            display: none !important;
+        }
+
+        .menu-footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wood-dark);
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 14px;
+            border: 2px solid var(--border-warm);
+        }
+
+        /* ==========================================================================
+           5. LAYAR 2: PILIH LEVEL SUKU NUSANTARA (16:9)
+           ========================================================================== */
+        #screen-levels {
+            padding: 22px 34px;
+            gap: 18px;
+            background-image: url('assets/latar.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(180deg, #8e562e 0%, #6d4021 100%);
+            padding: 12px 22px;
+            border-radius: 16px;
+            color: #fff;
+            border: 3px solid #c68b59;
+            box-shadow: 0 5px 0 #4a2a12;
+        }
+
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-title-group h2 {
+            font-size: 24px;
+            color: #fff8eb;
+            text-shadow: 0 2px 0 #3d200b;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 18px;
+            flex: 1;
+            z-index: 2;
+        }
+
+        .level-card {
+            background: var(--bg-panel);
+            border: 3px solid var(--border-warm);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            box-shadow: 0 6px 0 #d5c0a0, 0 10px 20px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 10px 0 #d5c0a0, 0 14px 25px rgba(0,0,0,0.12);
+        }
+
+        .level-card.completed {
+            border-color: #22c55e;
+            background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+        }
+
+        .level-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .level-num-badge {
+            background: var(--wood-dark);
+            color: #fff;
+            font-weight: 900;
+            font-size: 13px;
+            padding: 4px 11px;
+            border-radius: 999px;
+        }
+
+        .level-suku-tag {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .level-avatar-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: -8px;
+            margin: 8px 0;
+            height: 76px;
+        }
+
+        .level-avatar-mini {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #fff4e0;
+            border: 3px solid var(--wood-light);
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            margin: 0 -6px;
+        }
+
+        .level-card-info h3 {
+            font-size: 18px;
+            color: var(--text-main);
+            margin-bottom: 3px;
+            text-align: center;
+        }
+
+        .level-card-info p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .level-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 2px dashed #eee0c9;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        /* ==========================================================================
+           6. LAYAR 3: AREA PERMAINAN UTAMA (16:9)
+           ========================================================================== */
+        #screen-game {
+            padding: 12px 18px;
+            gap: 10px;
+            background-image: url('assets/latar.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .game-top-bar {
+            height: 58px;
+            background: linear-gradient(180deg, #8e562e 0%, #6d4021 100%);
+            border: 3px solid #c68b59;
+            border-radius: 14px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fff;
+            box-shadow: 0 4px 0 #4a2a12;
+            z-index: 5;
+        }
+
+        .game-level-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .suku-pill {
+            background: var(--accent-gold);
+            color: #3b2106;
+            font-weight: 900;
+            font-size: 13px;
+            padding: 5px 12px;
+            border-radius: 999px;
+        }
+
+        .game-level-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff9ed;
+            text-shadow: 0 2px 0 #3d200b;
+        }
+
+        .game-top-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .game-top-controls .btn {
+            padding: 7px 14px;
+            font-size: 14px;
+            border-radius: 11px;
+        }
+
+        /* Workspace Tengah: Pohon Silsilah (Kiri) + Panel Petunjuk (Kanan) */
+        .game-workspace {
+            display: flex;
+            gap: 12px;
+            height: 454px;
+            z-index: 2;
+        }
+
+        /* Area Pohon Silsilah */
+        .tree-board-container {
+            width: 790px;
+            height: 454px;
+            background: #f7edd9;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 3px solid #c9ab81;
+            border-radius: 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 25px rgba(139, 90, 44, 0.08);
+        }
+
+        /* Dekorasi Siluet Pohon Beringin Halus di Belakang Silsilah */
+        .tree-bg-foliage {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            display: none;
+        }
+
+        /* Legenda Mini di Sudut Papan Pohon */
+        .tree-legend {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 12px;
+            border-radius: 999px;
+            border: 2px solid #dfcaa8;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--wood-dark);
+            z-index: 4;
+        }
+
+        .tree-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Layer Garis Silsilah (SVG) */
+        #tree-lines-svg {
+            position: absolute;
+            inset: 0;
+            width: 790px;
+            height: 454px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Layer Kotak Slot Silsilah */
+        #tree-nodes-layer {
+            position: absolute;
+            inset: 0;
+            width: 790px;
+            height: 454px;
+            z-index: 2;
+        }
+
+        /* Kotak Slot pada Pohon Silsilah */
+        .tree-slot {
+            position: absolute;
+            width: 112px;
+            height: 110px;
+            transform: translate(-50%, -50%);
+            background: #fff9ee;
+            border: 3px dashed #b9986d;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+            cursor: pointer;
+            transition: transform 0.14s ease, border-color 0.14s ease, background-color 0.14s ease, box-shadow 0.14s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+
+        .tree-slot:hover, .tree-slot.drag-over {
+            border-color: var(--accent-blue);
+            background: #f0f9ff;
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
+        }
+
+        .tree-slot.target-ready {
+            border-color: var(--accent-gold);
+            background: #fffbeb;
+            animation: pulseSlot 1.2s infinite ease-in-out;
+        }
+
+        @keyframes pulseSlot {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 0 7px rgba(245, 158, 11, 0); }
+        }
+
+        .tree-slot.filled {
+            border-style: solid;
+            border-color: var(--wood-light);
+            background: #ffffff;
+            box-shadow: 0 5px 0 #cdb28b, 0 8px 14px rgba(0,0,0,0.1);
+        }
+
+        .tree-slot.correct-flash {
+            border-color: #16a34a !important;
+            background: #f0fdf4 !important;
+            box-shadow: 0 5px 0 #15803d, 0 0 15px rgba(22, 163, 74, 0.4) !important;
+        }
+
+        .tree-slot.wrong-shake {
+            border-color: #dc2626 !important;
+            background: #fef2f2 !important;
+            animation: shakeNode 0.4s ease;
+        }
+
+        @keyframes shakeNode {
+            0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+            25% { transform: translate(-50%, -50%) translateX(-7px); }
+            50% { transform: translate(-50%, -50%) translateX(7px); }
+            75% { transform: translate(-50%, -50%) translateX(-5px); }
+        }
+
+        .slot-empty-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            color: #a3845c;
+            text-align: center;
+            padding: 4px;
+        }
+
+        .slot-empty-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #f3e5cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .slot-role-hint {
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.15;
+            color: #8b6b43;
+        }
+
+        /* Tampilan Karakter Saat Berada di Dalam Slot Pohon */
+        .slot-char-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .slot-remove-btn {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #ef4444;
+            color: #fff;
+            border: 2px solid #fff;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+
+        .slot-avatar-wrap {
+            width: 68px;
+            height: 68px;
+            border-radius: 12px;
+            background: #fdf3e1;
+            overflow: hidden;
+            border: 2px solid #ecd5b0;
+            flex-shrink: 0;
+        }
+
+        .slot-name-tag {
+            width: 100%;
+            background: var(--wood-dark);
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 800;
+            text-align: center;
+            padding: 3px 4px;
+            border-radius: 7px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Lencana Pernikahan (Hati) di Antara Pasangan */
+        .marriage-badge {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border: 2.5px solid #e11d48;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 3px 6px rgba(225, 29, 72, 0.22);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Panel Petunjuk Silsilah (Kanan) */
+        .clues-panel {
+            flex: 1;
+            height: 454px;
+            background: var(--bg-panel);
+            border: 3px solid #c9ab81;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .clues-header {
+            background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+            color: #fff;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #b45309;
+        }
+
+        .clues-header h3 {
+            font-size: 17px;
+            font-weight: 900;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .clues-sub-tip {
+            font-size: 11.5px;
+            background: rgba(255, 255, 255, 0.24);
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        .clues-list {
+            flex: 1;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .clue-item {
+            background: #fffaf0;
+            border: 2px solid #ead6b3;
+            border-radius: 12px;
+            padding: 9px 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+        }
+
+        .clue-item:hover {
+            border-color: var(--accent-gold);
+            background: #fffbeb;
+        }
+
+        .clue-item.checked {
+            background: #f0fdf4;
+            border-color: #86efac;
+            opacity: 0.78;
+        }
+
+        .clue-item.checked .clue-text {
+            text-decoration: line-through;
+            color: #4b6b53;
+        }
+
+        .clue-check-box {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid #c5a475;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 900;
+            color: transparent;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .clue-item.checked .clue-check-box {
+            background: #16a34a;
+            border-color: #16a34a;
+            color: #fff;
+        }
+
+        .clue-text {
+            font-size: 14px;
+            line-height: 1.38;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .clue-text strong {
+            color: #9a3412;
+            font-weight: 800;
+            background: #ffedd5;
+            padding: 0 5px;
+            border-radius: 5px;
+        }
+
+        /* Status Bar Petunjuk di Bawah Panel Kanan */
+        .clues-footer {
+            padding: 9px 14px;
+            background: #f9f1e1;
+            border-top: 2px solid #ead6b3;
+            font-size: 12.5px;
+            font-weight: 800;
+            color: var(--wood-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* ==========================================================================
+           7. BAKI ANGGOTA KELUARGA (BOTTOM TRAY)
+           ========================================================================== */
+        .character-tray-wrapper {
+            flex: 1;
+            background: linear-gradient(180deg, #fff8eb 0%, #f2e2c6 100%);
+            border: 3px solid #c6a477;
+            border-radius: 18px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+             gap: 14px;
+            z-index: 3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+
+        .tray-label-box {
+            width: 165px;
+            background: var(--wood-dark);
+            color: #fff8eb;
+            padding: 10px 12px;
+            border-radius: 13px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .tray-label-box h4 {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--accent-gold);
+        }
+
+        .tray-label-box p {
+            font-size: 11.5px;
+            line-height: 1.25;
+            color: #f5dec0;
+            font-weight: 600;
+        }
+
+        #character-tray {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .char-card {
+            width: 112px;
+            height: 116px;
+            background: #ffffff;
+            border: 3px solid #cfa976;
+            border-radius: 16px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            cursor: grab;
+            transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, opacity 0.14s ease;
+            box-shadow: 0 5px 0 #c6a16e, 0 6px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .char-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+        }
+
+        .char-card.selected {
+            border-color: var(--accent-primary, #d94e34);
+            background: #fff7ed;
+            transform: translateY(-7px) scale(1.04);
+            box-shadow: 0 8px 0 #d94e34, 0 12px 20px rgba(217, 78, 52, 0.28);
+        }
+
+        .char-card.placed {
+            opacity: 0.32;
+            pointer-events: none;
+            transform: scale(0.94);
+            box-shadow: none;
+            border-style: dashed;
+        }
+
+        .char-avatar-box {
+            width: 68px;
+            height: 68px;
+            background: #fdf4e3;
+            border-radius: 12px;
+            border: 2px solid #ecd4b0;
+            overflow: hidden;
+        }
+
+        .char-card-name {
+            width: 100%;
+            background: #5c3418;
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 800;
+            text-align: center;
+            padding: 3px 4px;
+            border-radius: 7px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .char-gender-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            border: 1.5px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .gender-L { background: #0284c7; }
+        .gender-P { background: #db2777; }
+
+        /* Ghost saat Dragging */
+        #drag-ghost {
+            position: fixed;
+            width: 106px;
+            height: 108px;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            transform: translate(-50%, -50%) rotate(3deg) scale(1.08);
+            background: #fff;
+            border: 3px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 5px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 18px 32px rgba(0,0,0,0.32);
+        }
+
+        /* ==========================================================================
+           8. MODAL & NOTIFIKASI DALAM RASIO 16:9
+           ========================================================================== */
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(24, 15, 8, 0.72);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            padding: 24px;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+            animation: fadeInScreen 0.2s ease-out;
+        }
+
+        .modal-card {
+            background: var(--bg-panel);
+            border: 5px solid var(--wood-light);
+            border-radius: 26px;
+            width: 100%;
+            max-width: 760px;
+            max-height: 630px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            background: linear-gradient(180deg, #8e562e 0%, #6d4021 100%);
+            color: #fff;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid #4a2a12;
+        }
+
+        .modal-header h3 {
+            font-size: 24px;
+            color: #fff8eb;
+        }
+
+        .modal-body {
+            padding: 22px 26px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-footer {
+            padding: 14px 24px;
+            background: #f5ead6;
+            border-top: 2px solid var(--border-warm);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Kotak Info Budaya saat Menang */
+        .budaya-fact-box {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 3px solid #f59e0b;
+            border-radius: 18px;
+            padding: 16px 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .budaya-fact-icon {
+            font-size: 42px;
+            background: #fff;
+            width: 68px;
+            height: 68px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fde68a;
+            flex-shrink: 0;
+        }
+
+        .budaya-fact-text h4 {
+            font-size: 16px;
+            color: #92400e;
+            margin-bottom: 4px;
+        }
+
+        .budaya-fact-text p {
+            font-size: 14.5px;
+            line-height: 1.45;
+            color: #451a03;
+            font-weight: 600;
+        }
+
+        /* Tab Kamus Silsilah */
+        .kamus-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .kamus-tab-btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 2px solid var(--border-warm);
+            background: #fff;
+            font-family: var(--font-kids);
+            font-weight: 800;
+            font-size: 13.5px;
+            cursor: pointer;
+            color: var(--wood-dark);
+        }
+
+        .kamus-tab-btn.active {
+            background: var(--wood-dark);
+            color: #fff;
+            border-color: var(--wood-dark);
+        }
+
+        .kamus-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .kamus-card {
+            background: #fff9ef;
+            border: 2px solid #e6d2b2;
+            border-radius: 14px;
+            padding: 12px 14px;
+        }
+
+        .kamus-card h4 {
+            font-size: 16px;
+            color: #9a3412;
+            margin-bottom: 4px;
+        }
+
+        .kamus-card p {
+            font-size: 13.5px;
+            line-height: 1.4;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Toast Umpan Balik di Tengah Atas */
+        #toast-banner {
+            position: absolute;
+            top: 76px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #1e293b;
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.28);
+            border: 2px solid #fff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            z-index: 60;
+        }
+
+        #toast-banner.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+<div id="viewport">
+    <!-- KANVAS RASIO TETAP 16:9 (1280 x 720) -->
+    <div id="stage">
+        <div class="batik-pattern"></div>
+
+        <!-- NOTIFIKASI TOAST -->
+        <div id="toast-banner">Pesan Informasi</div>
+
+        <!-- ==================================================================
+             LAYAR 1: MENU UTAMA
+             ================================================================== -->
+        <section id="screen-menu" class="screen active">
+            <div class="menu-top-bar">
+                <div class="nusantara-badge">
+                    <span>🇮🇩</span>
+                    <span>Edukasi Silsilah & Budaya Suku Indonesia • Tingkat SD</span>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-wood btn-info" id="btn-menu-info" onclick="openModal('modal-info')" title="Informasi" aria-label="Informasi">
+                        ℹ️
+                    </button>
+                    <button class="btn btn-wood" id="btn-menu-sfx" onclick="toggleSFX()">
+                        <span id="sfx-icon-menu">🔊</span> <span id="sfx-text-menu">Efek Suara: Aktif</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-hero">
+                <div class="menu-left">
+                    <div class="game-title-box">
+                        <img src="assets/judul.png" alt="Silsilah Keluarga Nusantara" />
+                    </div>
+
+                    <div class="menu-actions">
+                        <button class="btn btn-gold btn-kamus" onclick="openModal('modal-kamus')" aria-label="Kamus Silsilah Nusantara">
+                            <img src="assets/kamus.png" alt="Kamus Silsilah Nusantara" />
+                        </button>
+                        <button class="btn btn-primary btn-big-play" onclick="openLevelSelect()" aria-label="Mulai bermain">
+                            <img src="assets/mulai.png" alt="Mulai Bermain" />
+                        </button>
+                        <button class="btn btn-blue btn-cara" onclick="openModal('modal-help')" aria-label="Cara bermain">
+                            <img src="assets/cara.png" alt="Cara Bermain" />
+                        </button>
+                    </div>
+                </div>
+
+                <div class="menu-right">
+                    <img class="family-figure" src="assets/keluarga.png" alt="Keluarga Nusantara" />
+                </div>
+            </div>
+
+            <div class="menu-footer">
+                <span>💡 Tips: Klik atau seret (drag & drop) kartu anggota keluarga ke kotak pohon silsilah yang tepat.</span>
+                <span id="menu-progress-summary">Progres Selesai: 0 / 8 Level</span>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             LAYAR 2: PILIH LEVEL SUKU NUSANTARA
+             ================================================================== -->
+        <section id="screen-levels" class="screen">
+            <div class="header-bar">
+                <div class="header-title-group">
+                    <button class="btn btn-wood" onclick="showScreen('screen-menu')">⬅ Menu Utama</button>
+                    <h2>Pilih Keluarga Nusantara</h2>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-gold" onclick="openModal('modal-kamus')">📖 Kamus Silsilah</button>
+                    <button class="btn btn-wood" onclick="resetAllProgress()">🔄 Atur Ulang Progres</button>
+                    <button class="btn btn-wood btn-icon" onclick="toggleSFX()" title="Sakelar Efek Suara">
+                        <span id="sfx-icon-levels">🔊</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="levels-grid" id="levels-grid-container">
+                <!-- Kartu Level 1 - 8 dirender secara dinamis dengan JS -->
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             LAYAR 3: PERMAINAN POHON SILSILAH (GAMEPLAY)
+             ================================================================== -->
+        <section id="screen-game" class="screen">
+            <!-- Bar Atas -->
+            <div class="game-top-bar">
+                <div class="game-level-banner">
+                    <button class="btn btn-wood" onclick="openLevelSelect()">⬅ Daftar Level</button>
+                    <span class="suku-pill" id="game-suku-badge">Suku Jawa</span>
+                    <span class="game-level-title" id="game-title-text">Level 1: Keluarga Inti</span>
+                </div>
+
+                <div class="game-top-controls">
+                    <button class="btn btn-gold" onclick="useHint()" title="Isi 1 kotak yang masih kosong/keliru">
+                        💡 Bantuan
+                    </button>
+                    <button class="btn btn-wood" onclick="resetCurrentLevel()" title="Kosongkan papan silsilah">
+                        🔄 Ulangi
+                    </button>
+                    <button class="btn btn-blue" onclick="openModal('modal-kamus')">
+                        📖 Kamus
+                    </button>
+                    <button class="btn btn-green" onclick="checkSolutionManual()">
+                        ✅ Periksa Silsilah
+                    </button>
+                    <button class="btn btn-wood btn-icon" onclick="toggleSFX()" title="Efek Suara">
+                        <span id="sfx-icon-game">🔊</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Area Tengah: Pohon Silsilah & Petunjuk -->
+            <div class="game-workspace">
+                <!-- Papan Pohon Silsilah (790 x 454) -->
+                <div class="tree-board-container" id="tree-board">
+                    <!-- Ornamen Pohon Latar -->
+                    <svg class="tree-bg-foliage" viewBox="0 0 790 454" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M395 454 L395 220" stroke="#6d4021" stroke-width="48" stroke-linecap="round"/>
+                        <path d="M395 320 L230 190 M395 290 L570 180 M395 250 L310 130 M395 250 L490 130" stroke="#6d4021" stroke-width="22" stroke-linecap="round"/>
+                        <circle cx="395" cy="145" r="160" fill="#15803d"/>
+                        <circle cx="240" cy="180" r="120" fill="#16a34a"/>
+                        <circle cx="550" cy="180" r="120" fill="#16a34a"/>
+                        <circle cx="150" cy="240" r="85" fill="#22c55e"/>
+                        <circle cx="640" cy="240" r="85" fill="#22c55e"/>
+                    </svg>
+
+                    <div class="tree-legend">
+                        <span>❤️ = Menikah (Suami-Istri)</span>
+                        <span>⬇ = Garis Keturunan (Anak)</span>
+                    </div>
+
+                    <!-- Garis Silsilah SVG -->
+                    <svg id="tree-lines-svg" viewBox="0 0 790 454"></svg>
+
+                    <!-- Slot Kotak Anggota Keluarga -->
+                    <div id="tree-nodes-layer"></div>
+                </div>
+
+                <!-- Panel Petunjuk (Kanan) -->
+                <div class="clues-panel">
+                    <div class="clues-header">
+                        <h3>📜 Petunjuk Silsilah</h3>
+                        <span class="clues-sub-tip">Klik petunjuk untuk mencentang ✓</span>
+                    </div>
+                    <div class="clues-list" id="clues-list-container">
+                        <!-- Daftar petunjuk dirender oleh JS -->
+                    </div>
+                    <div class="clues-footer">
+                        <span id="placed-counter-text">Terpasang: 0 / 4 Anggota</span>
+                        <span>💙 Laki-laki &nbsp;|&nbsp; 💗 Perempuan</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baki Bawah: Daftar Kartu Karakter -->
+            <div class="character-tray-wrapper">
+                <div class="tray-label-box">
+                    <h4>Anggota Keluarga</h4>
+                    <p id="tray-instruction">Seret kartu ke pohon silsilah, atau klik kartu lalu klik kotak tujuan.</p>
+                </div>
+                <div id="character-tray">
+                    <!-- Kartu karakter dirender oleh JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================================================================
+             MODAL 1: KEMENANGAN LEVEL & FAKTA BUDAYA NUSANTARA
+             ================================================================== -->
+        <div class="modal-backdrop" id="modal-win">
+            <div class="modal-card">
+                <div class="modal-header" style="background: linear-gradient(180deg, #16a34a 0%, #15803d 100%); border-color: #14532d;">
+                    <h3 id="win-modal-title">🎉 Hebat! Silsilah Keluarga Tepat!</h3>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 6px 0;">
+                        <div style="font-size: 46px; margin-bottom: 6px;">⭐⭐⭐</div>
+                        <h4 id="win-level-name" style="font-size: 22px; color: var(--wood-dark);">Level 1 Selesai</h4>
+                        <p style="font-size: 15px; color: var(--text-muted); font-weight: 600;">Kamu berhasil menyusun seluruh anggota keluarga di tempat yang benar!</p>
+                    </div>
+
+                    <div class="budaya-fact-box">
+                        <div class="budaya-fact-icon" id="win-culture-icon">🏛️</div>
+                        <div class="budaya-fact-text">
+                            <h4 id="win-culture-title">Tahukah Kamu? (Info Budaya)</h4>
+                            <p id="win-culture-desc">Penjelasan budaya suku terkait.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-wood" onclick="closeModal('modal-win'); openLevelSelect();">📋 Pilih Level Lain</button>
+                    <button class="btn btn-green" id="btn-next-level" onclick="goToNextLevel()">Level Berikutnya ➡</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================================================================
+             MODAL 2: KAMUS SILSILAH & SAPAAN SUKU NUSANTARA
+             ================================================================== -->
+        <div class="modal-backdrop" id="modal-kamus">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>📖 Kamus Silsilah & Sapaan Nusantara</h3>
+                    <button class="btn btn-wood" style="padding: 6px 14px;" onclick="closeModal('modal-kamus')">✖ Tutup</button>
+                </div>
+                <div class="modal-body">
+                    <div class="kamus-tabs">
+                        <button class="kamus-tab-btn active" id="tab-btn-istilah" onclick="switchKamusTab('istilah')">🌳 Istilah Silsilah Dasar</button>
+                        <button class="kamus-tab-btn" id="tab-btn-suku" onclick="switchKamusTab('suku')">🇮🇩 Panggilan Khas Suku Nusantara</button>
+                    </div>
+                    <div class="kamus-grid" id="kamus-content-grid">
+                        <!-- Dirender oleh JS -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="closeModal('modal-kamus')">Mengerti 👍</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================================================================
+             MODAL 3: CARA BERMAIN
+             ================================================================== -->
+        <div class="modal-backdrop" id="modal-help">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>❓ Cara Bermain Silsilah Keluarga</h3>
+                    <button class="btn btn-wood" style="padding: 6px 14px;" onclick="closeModal('modal-help')">✖ Tutup</button>
+                </div>
+                <div class="modal-body">
+                    <div class="kamus-grid">
+                        <div class="kamus-card">
+                            <h4>1. Baca Petunjuk Cerita 📜</h4>
+                            <p>Perhatikan panel <strong>Petunjuk Silsilah</strong> di sebelah kanan. Setiap kalimat memberi tahu hubungan antar anggota keluarga (seperti ayah, ibu, kakak, adik, kakek, paman, atau sepupu).</p>
+                        </div>
+                        <div class="kamus-card">
+                            <h4>2. Perhatikan Garis Pohon 🌳</h4>
+                            <p>Simbol <strong>❤️ (Hati)</strong> menghubungkan pasangan suami-istri. <strong>Garis ke bawah</strong> menghubungkan orang tua dengan anak-anak kandungnya.</p>
+                        </div>
+                        <div class="kamus-card">
+                            <h4>3. Seret atau Klik Karakter 👆</h4>
+                            <p>Kamu bisa <strong>menyeret (drag & drop)</strong> kartu karakter dari bawah ke kotak pohon, atau cukup <strong>klik kartu karakter lalu klik kotak tujuan</strong>.</p>
+                        </div>
+                        <div class="kamus-card">
+                            <h4>4. Centang & Periksa ✅</h4>
+                            <p>Klik kalimat petunjuk untuk memberi tanda centang (✓) agar tidak lupa. Jika semua kotak sudah terisi, pohon silsilah akan diperiksa secara otomatis!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-green" onclick="closeModal('modal-help')">Ayo Main Sekarang! ▶</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================================================================
+             MODAL 4: INFORMASI
+             Ubah judul dan isi di dalam elemen ini sesuai kebutuhan.
+             ================================================================== -->
+        <div class="modal-backdrop" id="modal-info">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3 id="modal-info-title">ℹ️ Informasi</h3>
+                    <button class="btn btn-wood" style="padding: 6px 14px;" onclick="closeModal('modal-info')">✖ Tutup</button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-info-content">
+                        <div class="kamus-card">
+                            <h4>Tujuan Pembelajaran</h4>
+                            <p>Murid mampu memahami sistem silsilah keluarga pada beberapa suku di Indonesia.</p>
+                            <h4>Pengembang</h4>
+                            <p>Ikhwanul Furqon, M.Pd., Gr. (SMAN 7 Kerinci).</p>
+                            <p>Redho Ade Putra, M.Pd., Gr. (SD IT Ibnu Abbas).</p>
+                            <h4>Sumber dan Rujukan</h4>
+                            <p>1. Fitri, A., dkk. (2023) Ilmu Pengetahuan Alam dan Sosial untuk SD/MI Kelas IV (Edisi Revisi). Kementerian Pendidikan, Kebudayaan, Riset dan Teknologi.</p>
+                            <p>2. Kerangka dasar gim, semua gambar, suara dan font dibuat menggunakan Gemini AI.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="closeModal('modal-info')">Mengerti 👍</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ELEMEN GHOST UNTUK DRAG & DROP -->
+<div id="drag-ghost"></div>
+
+<script>
+/* ==========================================================================
+   BAGIAN 1: MESIN EFEK SUARA NAVIGASI (WEB AUDIO API - 100% OFFLINE TANPA MUSIK LATAR)
+   ========================================================================== */
+const SoundFX = {
+    ctx: null,
+    enabled: true,
+
+    init() {
+        if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) {
+                this.ctx = new AudioCtx();
+            }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+        }
+    },
+
+    playTone(freq, type, duration, vol = 0.15, slideFreq = null) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+            const now = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, now);
+            if (slideFreq) {
+                osc.frequency.exponentialRampToValueAtTime(slideFreq, now + duration);
+            }
+
+            gain.gain.setValueAtTime(vol, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + duration);
+        } catch (e) {
+            // Abaikan jika konteks audio diblokir sementara
+        }
+    },
+
+    // Suara Klik Navigasi Tombol
+    click() {
+        this.playTone(520, 'sine', 0.08, 0.16, 680);
+    },
+
+    // Suara Mengambil / Memilih Kartu Karakter
+    pickup() {
+        this.playTone(400, 'triangle', 0.11, 0.18, 620);
+    },
+
+    // Suara Menaruh Karakter ke Kotak Pohon Silsilah
+    place() {
+        this.playTone(320, 'sine', 0.07, 0.2, 480);
+        setTimeout(() => this.playTone(640, 'triangle', 0.1, 0.16, 760), 45);
+    },
+
+    // Suara Mengembalikan Karakter ke Baki
+    remove() {
+        this.playTone(520, 'sine', 0.1, 0.14, 300);
+    },
+
+    // Suara Mencetang Petunjuk
+    checkClue() {
+        this.playTone(700, 'sine', 0.07, 0.12, 920);
+    },
+
+    // Suara Bantuan (Hint)
+    hint() {
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((n, i) => {
+            setTimeout(() => this.playTone(n, 'triangle', 0.14, 0.14), i * 60);
+        });
+    },
+
+    // Suara Jawaban Belum Tepat
+    error() {
+        this.playTone(220, 'sawtooth', 0.14, 0.12, 180);
+        setTimeout(() => this.playTone(185, 'sawtooth', 0.2, 0.12, 150), 130);
+    },
+
+    // Suara Menang Level
+    win() {
+        const melody = [
+            { f: 523.25, d: 0.12, t: 0 },
+            { f: 659.25, d: 0.12, t: 110 },
+            { f: 783.99, d: 0.12, t: 220 },
+            { f: 1046.50, d: 0.35, t: 330 }
+        ];
+        melody.forEach(m => {
+            setTimeout(() => this.playTone(m.f, 'triangle', m.d, 0.2), m.t);
+        });
+    }
+};
+
+function toggleSFX() {
+    SoundFX.enabled = !SoundFX.enabled;
+    if (SoundFX.enabled) SoundFX.click();
+
+    const icon = SoundFX.enabled ? '🔊' : '🔇';
+    const text = SoundFX.enabled ? 'Efek Suara: Aktif' : 'Efek Suara: Senyap';
+
+    const elMenuIcon = document.getElementById('sfx-icon-menu');
+    const elMenuText = document.getElementById('sfx-text-menu');
+    const elLevelsIcon = document.getElementById('sfx-icon-levels');
+    const elGameIcon = document.getElementById('sfx-icon-game');
+
+    if (elMenuIcon) elMenuIcon.textContent = icon;
+    if (elMenuText) elMenuText.textContent = text;
+    if (elLevelsIcon) elLevelsIcon.textContent = icon;
+    if (elGameIcon) elGameIcon.textContent = icon;
+}
+
+/* ==========================================================================
+   BAGIAN 2: GENERATOR AVATAR SVG NUSANTARA (100% OFFLINE & DAPAT DIKUSTOMISASI)
+   ========================================================================== */
+function createAvatarSVG(cfg) {
+    const skin = cfg.skin || '#F1C29B';
+    const shirt = cfg.shirt || '#d94e34';
+    const hairColor = cfg.age === 'elder' ? '#d1d5db' : (cfg.hairColor || '#271c15');
+    const isElder = cfg.age === 'elder';
+    const isChild = cfg.age === 'child';
+
+    // Latar belakang lembut sesuai usia/gender
+    const bgCircle = cfg.gender === 'L' ? '#e0f2fe' : '#fce7f3';
+
+    // Kerutan halus untuk kakek/nenek
+    const elderLines = isElder ? `
+        <path d="M36 42 Q40 40 44 42" stroke="#b58863" stroke-width="1.4" fill="none" opacity="0.7"/>
+        <path d="M56 42 Q60 40 64 42" stroke="#b58863" stroke-width="1.4" fill="none" opacity="0.7"/>
+        <path d="M34 61 Q31 65 34 69" stroke="#b58863" stroke-width="1.3" fill="none" opacity="0.6"/>
+        <path d="M66 61 Q69 65 66 69" stroke="#b58863" stroke-width="1.3" fill="none" opacity="0.6"/>
+    ` : '';
+
+    // Kacamata opsional
+    const glassesSVG = cfg.glasses ? `
+        <g stroke="#374151" stroke-width="2" fill="rgba(255,255,255,0.25)">
+            <circle cx="40" cy="52" r="7"/>
+            <circle cx="60" cy="52" r="7"/>
+            <line x1="47" y1="52" x2="53" y2="52"/>
+        </g>
+    ` : '';
+
+    // Kumis opsional untuk Bapak/Kakek
+    const mustacheSVG = cfg.mustache ? `
+        <path d="M41 63 Q50 59 59 63 Q50 61 41 63 Z" fill="${hairColor}" stroke="${hairColor}" stroke-width="1.5"/>
+    ` : '';
+
+    // Rambut Dasar
+    let hairBack = '';
+    let hairFront = '';
+
+    if (cfg.hair === 'hijab') {
+        hairBack = `<path d="M22 52 Q22 20 50 20 Q78 20 78 52 L82 88 L18 88 Z" fill="${cfg.hijabColor || '#0284c7'}"/>`;
+        hairFront = `
+            <path d="M25 50 Q25 23 50 23 Q75 23 75 50 Q75 74 50 79 Q25 74 25 50 Z" fill="none" stroke="${cfg.hijabColor || '#0284c7'}" stroke-width="6"/>
+            <path d="M20 78 Q50 92 80 78 L84 96 L16 96 Z" fill="${cfg.hijabColor || '#0284c7'}"/>
+        `;
+    } else if (cfg.hair === 'bun') {
+        // Sanggul Tradisional Ibu/Nenek
+        hairBack = `
+            <circle cx="50" cy="20" r="14" fill="${hairColor}"/>
+            <circle cx="32" cy="26" r="5" fill="#f59e0b"/>
+            <circle cx="68" cy="26" r="5" fill="#f59e0b"/>
+        `;
+        hairFront = `<path d="M26 48 Q26 24 50 24 Q74 24 74 48 Q62 32 50 34 Q38 32 26 48 Z" fill="${hairColor}"/>`;
+    } else if (cfg.hair === 'pigtails') {
+        // Kuncir Dua Anak Perempuan
+        hairBack = `
+            <circle cx="21" cy="48" r="10" fill="${hairColor}"/>
+            <circle cx="79" cy="48" r="10" fill="${hairColor}"/>
+            <circle cx="26" cy="45" r="3.5" fill="#ec4899"/>
+            <circle cx="74" cy="45" r="3.5" fill="#ec4899"/>
+        `;
+        hairFront = `<path d="M26 48 Q26 24 50 24 Q74 24 74 48 Q64 33 50 35 Q36 33 26 48 Z" fill="${hairColor}"/>`;
+    } else if (cfg.hair === 'long') {
+        hairBack = `<path d="M24 45 L20 82 L80 82 L76 45 Z" fill="${hairColor}"/>`;
+        hairFront = `<path d="M25 48 Q26 23 50 23 Q74 23 75 48 Q64 34 50 35 Q36 34 25 48 Z" fill="${hairColor}"/>`;
+    } else if (cfg.hair === 'curly') {
+        // Rambut Keriting Khas Timur / Papua / Ambon
+        hairBack = `
+            <circle cx="30" cy="34" r="11" fill="${hairColor}"/>
+            <circle cx="43" cy="26" r="12" fill="${hairColor}"/>
+            <circle cx="57" cy="26" r="12" fill="${hairColor}"/>
+            <circle cx="70" cy="34" r="11" fill="${hairColor}"/>
+            <circle cx="25" cy="46" r="9" fill="${hairColor}"/>
+            <circle cx="75" cy="46" r="9" fill="${hairColor}"/>
+        `;
+        hairFront = `<path d="M28 42 Q40 31 50 34 Q60 31 72 42 Q60 28 50 28 Q40 28 28 42 Z" fill="${hairColor}"/>`;
+    } else {
+        // Rambut Pendek Rapi Laki-laki
+        hairFront = `<path d="M26 48 Q25 23 50 23 Q75 23 74 48 Q68 33 50 33 Q32 33 26 48 Z" fill="${hairColor}"/>`;
+    }
+
+    // Penutup Kepala Khas Suku Nusantara (Hat / Headgear)
+    let hatSVG = '';
+    if (cfg.hat === 'blangkon') {
+        // Blangkon Jawa
+        hatSVG = `
+            <path d="M24 41 Q26 19 50 19 Q74 19 76 41 Z" fill="#6b3e26"/>
+            <path d="M24 38 Q50 31 76 38 L75 42 Q50 35 25 42 Z" fill="#d97706"/>
+            <path d="M35 24 L45 36 M50 20 L58 35 M62 24 L69 36" stroke="#f59e0b" stroke-width="1.8" opacity="0.7"/>
+        `;
+    } else if (cfg.hat === 'iket_sunda') {
+        // Totopong / Iket Sunda
+        hatSVG = `
+            <path d="M24 40 L32 22 L50 28 L68 22 L76 40 Z" fill="#1e3a8a"/>
+            <path d="M24 37 Q50 31 76 37 L75 42 Q50 36 25 42 Z" fill="#f59e0b"/>
+        `;
+    } else if (cfg.hat === 'udeng_bali') {
+        // Udeng Bali
+        hatSVG = `
+            <path d="M25 41 L28 27 L50 17 L72 27 L75 41 Z" fill="#ffffff" stroke="#d97706" stroke-width="2"/>
+            <path d="M46 27 L50 14 L54 27 Z" fill="#f59e0b"/>
+            <path d="M25 38 Q50 33 75 38 L75 42 Q50 37 25 42 Z" fill="#dc2626"/>
+        `;
+    } else if (cfg.hat === 'peci') {
+        // Peci / Kopiah Nusantara
+        hatSVG = `
+            <path d="M27 40 L30 21 L70 21 L73 40 Z" fill="#1f2937"/>
+            <path d="M29 35 L71 35" stroke="#f59e0b" stroke-width="2"/>
+        `;
+    } else if (cfg.hat === 'tengkuluk') {
+        // Tengkuluk Tanduk Khas Bundo Kanduang Minang
+        hatSVG = `
+            <path d="M14 20 Q32 36 50 28 Q68 36 86 20 L74 42 Q50 35 26 42 Z" fill="#dc2626" stroke="#f59e0b" stroke-width="2"/>
+            <path d="M22 25 Q50 38 78 25" stroke="#fde047" stroke-width="2.5" fill="none"/>
+        `;
+    } else if (cfg.hat === 'sortali_batak') {
+        // Ikat Kepala Sortali Batak (Merah-Hitam-Putih)
+        hatSVG = `
+            <path d="M25 35 Q50 29 75 35 L75 42 Q50 36 25 42 Z" fill="#dc2626"/>
+            <path d="M25 37.5 Q50 31.5 75 37.5" stroke="#ffffff" stroke-width="2" fill="none"/>
+            <polygon points="50,27 54,34 46,34" fill="#f59e0b"/>
+        `;
+    } else if (cfg.hat === 'passapu_bugis') {
+        // Songkok Recca / Passapu Bugis Makassar
+        hatSVG = `
+            <path d="M27 40 L29 22 L71 22 L73 40 Z" fill="#78350f" stroke="#f59e0b" stroke-width="2"/>
+            <path d="M28 32 L72 32 M28 27 L72 27" stroke="#f59e0b" stroke-width="1.5"/>
+        `;
+    } else if (cfg.hat === 'headband_papua') {
+        // Mahkota Kasuari / Ikat Kepala Papua
+        hatSVG = `
+            <path d="M36 27 L33 13 M43 25 L42 10 M50 24 L50 8 M57 25 L58 10 M64 27 L67 13" stroke="#92400e" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M26 36 Q50 31 74 36 L74 41 Q50 36 26 41 Z" fill="#d97706"/>
+            <circle cx="38" cy="38" r="2" fill="#fff"/>
+            <circle cx="50" cy="37" r="2" fill="#fff"/>
+            <circle cx="62" cy="38" r="2" fill="#fff"/>
+        `;
+    } else if (cfg.hat === 'headband_dayak') {
+        // Lavung / Ikat Kepala Dayak
+        hatSVG = `
+            <path d="M50 26 L46 9 L50 13 L54 9 Z" fill="#f8fafc" stroke="#1e293b" stroke-width="1.2"/>
+            <path d="M26 36 Q50 31 74 36 L74 41 Q50 36 26 41 Z" fill="#b91c1c"/>
+            <circle cx="50" cy="38" r="3" fill="#facc15"/>
+        `;
+    }
+
+    const headRadius = isChild ? 21 : 23;
+    const headY = isChild ? 54 : 51;
+
+    return `
+    <svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100" height="100" fill="${bgCircle}"/>
+        ${hairBack}
+        <!-- Pakaian / Bahu -->
+        <path d="M18 98 Q20 73 50 73 Q80 73 82 98 Z" fill="${shirt}"/>
+        <!-- Kerah / Ornamen Baju -->
+        <path d="M38 74 L50 88 L62 74" fill="none" stroke="#fde68a" stroke-width="3" stroke-linecap="round"/>
+        <!-- Telinga -->
+        <circle cx="${50 - headRadius}" cy="${headY + 2}" r="5" fill="${skin}"/>
+        <circle cx="${50 + headRadius}" cy="${headY + 2}" r="5" fill="${skin}"/>
+        <!-- Wajah -->
+        <circle cx="50" cy="${headY}" r="${headRadius}" fill="${skin}"/>
+        <!-- Pipi Merona -->
+        <circle cx="35" cy="${headY + 6}" r="4" fill="#f43f5e" opacity="0.22"/>
+        <circle cx="65" cy="${headY + 6}" r="4" fill="#f43f5e" opacity="0.22"/>
+        <!-- Senyum Ramah -->
+        <path d="M42 ${headY + 10} Q50 ${headY + 16} 58 ${headY + 10}" stroke="#881337" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        ${elderLines}
+        ${mustacheSVG}
+        ${glassesSVG}
+        ${hairFront}
+        ${hatSVG}
+    </svg>`;
+}
+
+/* ==========================================================================
+   BAGIAN 3: DATABASE 8 LEVEL KELUARGA SUKU NUSANTARA
+   Koordinat x (0-790) dan y (0-454) dirancang presisi agar garis tidak bertumpuk
+   ========================================================================== */
+const LEVELS = [
+    // ----------------------------------------------------------------------
+    // LEVEL 1: KELUARGA JAWA (YOGYAKARTA) - 4 ANGGOTA
+    // ----------------------------------------------------------------------
+    {
+        id: 1,
+        suku: "Suku Jawa (Yogyakarta)",
+        title: "Keluarga Inti Pak Budi",
+        subtitle: "Ayah, Ibu, Kakak, dan Adik",
+        cultureIcon: "🎭",
+        cultureTitle: "Tahukah Kamu? Sapaan Keluarga di Jawa",
+        cultureFact: "Dalam budaya Jawa, ayah biasa dipanggil 'Bapak' atau 'Rama', dan ibu dipanggil 'Ibu' atau 'Biyung'. Kakak laki-laki dipanggil 'Mas', sedangkan kakak perempuan dipanggil 'Mbak'.",
+        nodes: [
+            { id: "n_ayah", x: 295, y: 125, roleHint: "Kepala Keluarga (Ayah)", answer: "budi" },
+            { id: "n_ibu",  x: 495, y: 125, roleHint: "Istri / Ibu", answer: "sri" },
+            { id: "n_anak1", x: 295, y: 340, roleHint: "Anak Pertama", answer: "bagus" },
+            { id: "n_anak2", x: 495, y: 340, roleHint: "Anak Kedua", answer: "sari" }
+        ],
+        unions: [
+            { spouse1: "n_ayah", spouse2: "n_ibu", children: ["n_anak1", "n_anak2"] }
+        ],
+        characters: [
+            { id: "budi",  name: "Pak Budi",  gender: "L", age: "adult", skin: "#E5A97C", shirt: "#78350f", hat: "blangkon", mustache: true },
+            { id: "sri",   name: "Bu Sri",    gender: "P", age: "adult", skin: "#F1C29B", shirt: "#b45309", hair: "bun" },
+            { id: "bagus", name: "Mas Bagus", gender: "L", age: "child", skin: "#E5A97C", shirt: "#0284c7", hair: "short" },
+            { id: "sari",  name: "Dik Sari",  gender: "P", age: "child", skin: "#F1C29B", shirt: "#db2777", hair: "pigtails" }
+        ],
+        clues: [
+            "<strong>Pak Budi</strong> adalah seorang ayah yang berada di kotak kiri atas.",
+            "<strong>Bu Sri</strong> adalah istri dari Pak Budi.",
+            "<strong>Mas Bagus</strong> adalah anak pertama yang berada di kotak kiri bawah.",
+            "<strong>Dik Sari</strong> adalah adik perempuan dari Mas Bagus."
+        ]
+    },
+
+    // ----------------------------------------------------------------------
+    // LEVEL 2: KELUARGA SUNDA (BANDUNG) - 5 ANGGOTA (3 GENERASI)
+    // ----------------------------------------------------------------------
+    {
+        id: 2,
+        suku: "Suku Sunda (Jawa Barat)",
+        title: "Kasih Sayang Aki & Nini",
+        subtitle: "Mengenal 3 Generasi: Kakek, Orang Tua, dan Cucu",
+        cultureIcon: "🎋",
+        cultureTitle: "Tahukah Kamu? Panggilan Keluarga di Tanah Pasundan",
+        cultureFact: "Di masyarakat Sunda, kakek dipanggil 'Aki' dan nenek dipanggil 'Nini'. Kakak laki-laki disapa 'Akang' atau 'Aa', sedangkan kakak perempuan disapa 'Teteh'.",
+        nodes: [
+            { id: "s_aki",   x: 295, y: 78,  roleHint: "Kakek (Generasi 1)", answer: "maman" },
+            { id: "s_nini",  x: 495, y: 78,  roleHint: "Nenek (Generasi 1)", answer: "imas" },
+            { id: "s_ayah",  x: 295, y: 228, roleHint: "Anak Aki & Nini", answer: "asep" },
+            { id: "s_ibu",   x: 495, y: 228, roleHint: "Menantu / Istri", answer: "euis" },
+            { id: "s_cucu",  x: 395, y: 376, roleHint: "Cucu (Generasi 3)", answer: "jajang" }
+        ],
+        unions: [
+            { spouse1: "s_aki", spouse2: "s_nini", children: ["s_ayah"] },
+            { spouse1: "s_ayah", spouse2: "s_ibu", children: ["s_cucu"] }
+        ],
+        characters: [
+            { id: "maman",  name: "Aki Maman", gender: "L", age: "elder", skin: "#E5A97C", shirt: "#1e3a8a", hat: "iket_sunda", glasses: true },
+            { id: "imas",   name: "Nini Imas", gender: "P", age: "elder", skin: "#F1C29B", shirt: "#047857", hair: "hijab", hijabColor: "#10b981" },
+            { id: "asep",   name: "Kang Asep", gender: "L", age: "adult", skin: "#E5A97C", shirt: "#0369a1", hat: "iket_sunda" },
+            { id: "euis",   name: "Teh Euis",  gender: "P", age: "adult", skin: "#F7D1B2", shirt: "#be185d", hair: "long" },
+            { id: "jajang", name: "Jajang",    gender: "L", age: "child", skin: "#E5A97C", shirt: "#ea580c", hair: "short" }
+        ],
+        clues: [
+            "<strong>Aki Maman</strong> adalah kakek Jajang yang berada di kotak kiri atas.",
+            "<strong>Nini Imas</strong> adalah istri dari Aki Maman.",
+            "<strong>Kang Asep</strong> adalah anak kandung dari Aki Maman dan Nini Imas.",
+            "<strong>Teh Euis</strong> menikah dengan Kang Asep.",
+            "<strong>Jajang</strong> adalah anak dari Kang Asep dan Teh Euis (cucu Aki & Nini)."
+        ]
+    },
+
+    // ----------------------------------------------------------------------
+    // LEVEL 3: KELUARGA BALI (DENPASAR) - 6 ANGGOTA
+    // ----------------------------------------------------------------------
+    {
+        id: 3,
+        suku: "Suku Bali (Denpasar)",
+        title: "Empat Bersaudara di Bali",
+        subtitle: "Urutan Nama Kelahiran Anak di Bali",
+        cultureIcon: "🌺",
+        cultureTitle: "Tahukah Kamu? Urutan Nama Anak di Bali",
+        cultureFact: "Masyarakat Bali memiliki tradisi unik menamai anak sesuai urutan lahir: anak pertama bernama Wayan/Putu, anak kedua Made/Kadek, anak ketiga Nyoman/Komang, dan anak keempat Ketut!",
+        nodes: [
+            { id: "b_ayah", x: 295, y: 115, roleHint: "Ayah (Bapa)", answer: "gede" },
+            { id: "b_ibu",  x: 495, y: 115, roleHint: "Ibu (Meme)", answer: "luh" },
+            { id: "b_c1",   x: 135, y: 340, roleHint: "Anak Ke-1 (Sulung)", answer: "wayan" },
+            { id: "b_c2",   x: 308, y: 340, roleHint: "Anak Ke-2", answer: "made" },
+            { id: "b_c3",   x: 482, y: 340, roleHint: "Anak Ke-3", answer: "nyoman" },
+            { id: "b_c4",   x: 655, y: 340, roleHint: "Anak Ke-4 (Bungsu)", answer: "ketut" }
+        ],
+        unions: [
+            { spouse1: "b_ayah", spouse2: "b_ibu", children: ["b_c1", "b_c2", "b_c3", "b_c4"] }
+        ],
+        characters: [
+            { id: "gede",   name: "Bapa Gede",   gender: "L", age: "adult", skin: "#D48E5C", shirt: "#b45309", hat: "udeng_bali" },
+            { id: "luh",    name: "Meme Luh",    gender: "P", age: "adult", skin: "#F1C29B", shirt: "#d97706", hair: "bun" },
+            { id: "wayan",  name: "Wayan Dipa",  gender: "L", age: "child", skin: "#E5A97C", shirt: "#0284c7", hat: "udeng_bali" },
+            { id: "made",   name: "Made Sinta",  gender: "P", age: "child", skin: "#F1C29B", shirt: "#ec4899", hair: "long" },
+            { id: "nyoman", name: "Nyoman Raka", gender: "L", age: "child", skin: "#D48E5C", shirt: "#16a34a", hair: "short" },
+            { id: "ketut",  name: "Ketut Tari",  gender: "P", age: "child", skin: "#F1C29B", shirt: "#9333ea", hair: "pigtails" }
+        ],
+        clues: [
+            "<strong>Bapa Gede</strong> adalah ayah yang berada di sebelah kiri istrinya, <strong>Meme Luh</strong>.",
+            "Anak pertama bernama <strong>Wayan Dipa</strong> dan berada di kotak anak paling kiri.",
+            "<strong>Made Sinta</strong> adalah anak kedua, tepat di sebelah kanan Wayan Dipa.",
+            "<strong>Ketut Tari</strong> adalah anak keempat (bungsu) di kotak paling kanan bawah.",
+            "<strong>Nyoman Raka</strong> adalah anak ketiga yang berada di antara Made Sinta dan Ketut Tari."
+        ]
+    },
+
+    // ----------------------------------------------------------------------
+    // LEVEL 4: KELUARGA MINANGKABAU (PADANG) - 6 ANGGOTA
+    // ----------------------------------------------------------------------
+    {
+        id: 4,
+        suku: "Suku Minangkabau (Sumatera Barat)",
+        title: "Mamak dan Kemenakan",
+        subtitle: "Mengenal Peran Paman (Mamak) dalam Keluarga",
+        cultureIcon: "🏠",
+        cultureTitle: "Tahukah Kamu? Peran 'Mamak' di Minangkabau",
+        cultureFact: "Di Minangkabau, saudara laki-laki dari Ibu dipanggil 'Mamak' (Paman). Seorang Mamak memiliki peran penting untuk membimbing keponakannya yang disebut 'Kemenakan'.",
+        nodes: [
+            { id: "m_kakek", x: 310, y: 78,  roleHint: "Kakek (Inyiak)", answer: "basri" },
+            { id: "m_nenek", x: 480, y: 78,  roleHint: "Nenek (Uwan)", answer: "rosma" },
+            { id: "m_ayah",  x: 155, y: 228, roleHint: "Suami / Ayah", answer: "syahrul" },
+            { id: "m_ibu",   x: 325, y: 228, roleHint: "Anak Perempuan Inyiak", answer: "ratna" },
+            { id: "m_mamak", x: 565, y: 228, roleHint: "Paman (Saudara Ibu)", answer: "ridwan" },
+            { id: "m_anak",  x: 240, y: 376, roleHint: "Anak / Kemenakan", answer: "farhan" }
+        ],
+        unions: [
+            { spouse1: "m_kakek", spouse2: "m_nenek", children: ["m_ibu", "m_mamak"] },
+            { spouse1: "m_ayah", spouse2: "m_ibu", children: ["m_anak"] }
+        ],
+        characters: [
+            { id: "basri",   name: "Inyiak Basri", gender: "L", age: "elder", skin: "#E5A97C", shirt: "#78350f", hat: "peci", glasses: true },
+            { id: "rosma",   name: "Uwan Rosma",   gender: "P", age: "elder", skin: "#F1C29B", shirt: "#991b1b", hat: "tengkuluk" },
+            { id: "syahrul", name: "Pak Syahrul",  gender: "L", age: "adult", skin: "#D48E5C", shirt: "#1e40af", hat: "peci", mustache: true },
+            { id: "ratna",   name: "Bundo Ratna",  gender: "P", age: "adult", skin: "#F1C29B", shirt: "#dc2626", hat: "tengkuluk" },
+            { id: "ridwan",  name: "Mamak Ridwan", gender: "L", age: "adult", skin: "#E5A97C", shirt: "#b45309", hat: "peci" },
+            { id: "farhan",  name: "Farhan",       gender: "L", age: "child", skin: "#F1C29B", shirt: "#15803d", hair: "short" }
+        ],
+        clues: [
+            "<strong>Inyiak Basri</strong> (kiri atas) menikah dengan <strong>Uwan Rosma</strong> (kanan atas).",
+            "Inyiak Basri dan Uwan Rosma memiliki dua anak kandung: <strong>Bundo Ratna</strong> (tengah) dan <strong>Mamak Ridwan</strong> (kanan tengah).",
+            "<strong>Pak Syahrul</strong> berada di kotak paling kiri tengah dan menikah dengan Bundo Ratna.",
+            "<strong>Farhan</strong> adalah anak dari Pak Syahrul dan Bundo Ratna, sekaligus keponakan dari Mamak Ridwan."
+        ]
+    },
+
+    // ----------------------------------------------------------------------
+    // LEVEL 5: KELUARGA BATAK (SUMATERA UTARA) - 7 ANGGOTA
+    // ----------------------------------------------------------------------
+    {
+        id: 5,
+        suku: "Suku Batak (Sumatera Utara)",
+        title: "Keakraban Dua Sepupu",
+        subtitle: "Opung, Tulang (Paman), serta Sepupu Ucok & Butet",
+        cultureIcon: "🧣",
+        cultureTitle: "Tahukah Kamu? Panggilan Opung, Ucok, dan Butet",
+        cultureFact: "Dalam tradisi Batak, kakek dan nenek sama-sama disapa 'Opung'. Paman (saudara laki-laki Ibu) dipanggil 'Tulang'. Anak laki-laki sering disapa 'Ucok' dan anak perempuan disapa 'Butet'.",
+        nodes: [
+            { id: "bt_op1",    x: 310, y: 78,  roleHint: "Kakek (Opung Doli)", answer: "togar" },
+            { id: "bt_op2",    x: 480, y: 78,  roleHint: "Nenek (Opung Boru)", answer: "tiur" },
+            { id: "bt_suami",  x: 155, y: 228, roleHint: "Menantu / Ayah", answer: "tigor" },
+            { id: "bt_inang",  x: 325, y: 228, roleHint: "Ibu (Anak Opung)", answer: "sondang" },
+            { id: "bt_tulang", x: 575, y: 228, roleHint: "Paman (Anak Opung)", answer: "poltak" },
+            { id: "bt_cucu1",  x: 240, y: 376, roleHint: "Cucu Perempuan", answer: "butet" },
+            { id: "bt_cucu2",  x: 575, y: 376, roleHint: "Cucu Laki-laki (Sepupu)", answer: "ucok" }
+        ],
+        unions: [
+            { spouse1: "bt_op1", spouse2: "bt_op2", children: ["bt_inang", "bt_tulang"] },
+            { spouse1: "bt_suami", spouse2: "bt_inang", children: ["bt_cucu1"] },
+            { spouse1: "bt_tulang", spouse2: null, children: ["bt_cucu2"] }
+        ],
+        characters: [
+            { id: "togar",   name: "Opung Togar",   gender: "L", age: "elder", skin: "#D48E5C", shirt: "#7f1d1d", hat: "sortali_batak", glasses: true },
+            { id: "tiur",    name: "Opung Tiur",    gender: "P", age: "elder", skin: "#E5A97C", shirt: "#991b1b", hair: "bun" },
+            { id: "tigor",   name: "Amang Tigor",   gender: "L", age: "adult", skin: "#D48E5C", shirt: "#1e3a8a", mustache: true },
+            { id: "sondang", name: "Inang Sondang", gender: "P", age: "adult", skin: "#F1C29B", shirt: "#dc2626", hat: "sortali_batak" },
+            { id: "poltak",  name: "Tulang Poltak", gender: "L", age: "adult", skin: "#D48E5C", shirt: "#374151", hat: "sortali_batak" },
+            { id: "butet",   name: "Butet",         gender: "P", age: "child", skin: "#F1C29B", shirt: "#db2777", hair: "pigtails" },
+            { id: "ucok",    name: "Ucok",          gender: "L", age: "child", skin: "#E5A97C", shirt: "#0284c7", hair: "short" }
+        ],
+        clues: [
+            "<strong>Opung Togar</strong> berada di sebelah kiri istrinya, <strong>Opung Tiur</strong>.",
+            "<strong>Inang Sondang</strong> (tengah) dan <strong>Tulang Poltak</strong> (kanan tengah) adalah anak kandung Opung Togar dan Opung Tiur.",
+            "<strong>Amang Tigor</strong> berada di kotak paling kiri tengah dan menikah dengan Inang Sondang.",
+            "<strong>Butet</strong> adalah anak perempuan dari Amang Tigor dan Inang Sondang.",
+            "<strong>Ucok</strong> adalah anak dari Tulang Poltak, sehingga Ucok dan Butet bersaudara sepupu."
+        ]
+    },
+
+    // ----------------------------------------------------------------------
+    // LEVEL 6: KELUARGA BUGIS (SULAWESI SELATAN) - 7 ANGGOTA
+    // ----------------------------------------------------------------------
+    {
+        id: 6,
+        suku: "Suku Bugis (Sulawesi Selatan)",
+        title: "Keluarga Besar Daeng & Andi",
+        subtitle: "Paman, Orang Tua, serta Kakak-Beradik Baso & Besse",
+        cultureIcon: "⛵",
+        cultureTitle: "Tahukah Kamu? Sapaan Baso, Besse, dan Daeng",
+        cultureFact: "Di Sulawesi Selatan (Bugis-Makassar), anak laki-laki sering disapa dengan panggilan sayang 'Baso' dan anak perempuan disapa 'Besse'. Panggilan 'Daeng' digunakan sebagai tanda hormat kepada kakak atau orang yang dituakan.",
+        nodes: [
+            { id: "bg_kakek", x: 310, y: 78,  roleHint: "Kakek (Puang)", answer: "gassing" },
+            { id: "bg_nenek", x: 480, y: 78,  roleHint: "Nenek (Indo)", answer: "bunga" },
+            { id: "bg_paman", x: 185, y: 228, roleHint: "Anak Pertama (Paman)", answer: "alle" },
+            { id: "bg_ayah",  x: 425, y: 228, roleHint: "Anak Kedua (Ayah)", answer: "tonji" },
+            { id: "bg_ibu",   x: 605, y: 228, roleHint: "Menantu / Ibu", answer: "tenri" },
+            { id: "bg_c1",    x: 425, y: 376, roleHint: "Cucu Laki-laki", answer: "baso" },
+            { id: "bg_c2",    x: 605, y: 376, roleHint: "Cucu Perempuan", answer: "besse" }
+        ],
+        unions: [
+            { spouse1: "bg_kakek", spouse2: "bg_nenek", children: ["bg_paman", "bg_ayah"] },
+            { spouse1: "bg_ayah", spouse2: "bg_ibu", children: ["bg_c1", "bg_c2"] }
+        ],
+        characters: [
+            { id: "gassing", name: "Puang Gassing", gender: "L", age: "elder", skin: "#D48E5C", shirt: "#78350f", hat: "passapu_bugis", glasses: true },
+            { id: "bunga",   name: "Indo Bunga",    gender: "P", age: "elder", skin: "#F1C29B", shirt: "#b45309", hair: "bun" },
+            { id: "alle",    name: "Daeng Alle",    gender: "L", age: "adult", skin: "#E5A97C", shirt: "#15803d", hat: "passapu_bugis" },
+            { id: "tonji",   name: "Daeng Tonji",   gender: "L", age: "adult", skin: "#D48E5C", shirt: "#b91c1c", hat: "passapu_bugis", mustache: true },
+            { id: "tenri",   name: "Andi Tenri",    gender: "P", age: "adult", skin: "#F7D1B2", shirt: "#d97706", hair: "hijab", hijabColor: "#f59e0b" },
+            { id: "baso",    name: "Baso",          gender: "L", age: "child", skin: "#E5A97C", shirt: "#0284c7", hair: "short" },
+            { id: "besse",   name: "Besse",         gender: "P", age: "child", skin: "#F7D1B2", shirt: "#ec4899", hair: "pigtails" }
+        ],
+        clues: [
+            "<strong>Puang Gassing</strong> adalah kakek yang berada di sebelah kiri istrinya, <strong>Indo Bunga</strong>.",
+            "<strong>Daeng Alle</strong> adalah anak tertua Puang Gassing yang berada di kotak kiri tengah.",
+            "<strong>Daeng Tonji</strong> adalah adik dari Daeng Alle yang menikah dengan <strong>Andi Tenri</strong>.",
+            "Daeng Tonji dan Andi Tenri memiliki dua anak: <strong>Baso</strong> (di sebelah kiri) dan adiknya, <strong>Besse</strong> (di sebelah kanan)."
+        ]
+    },
+
+    // ----------------------------------------------------------------------
+    // LEVEL 7: KELUARGA PAPUA (JAYAPURA) - 8 ANGGOTA (2 PASANG KAKEK-NENEK)
+    // ----------------------------------------------------------------------
+    {
+        id: 7,
+        suku: "Suku Papua (Jayapura)",
+        title: "Keluarga Besar Tete & Nene",
+        subtitle: "Dua Pasang Kakek-Nenek dari Pihak Ayah dan Ibu",
+        cultureIcon: "🦜",
+        cultureTitle: "Tahukah Kamu? Sapaan Tete, Nene, Pace, dan Mace",
+        cultureFact: "Di Papua dan Maluku, kakek disapa dengan hangat sebagai 'Tete' dan nenek disapa 'Nene'. Ayah atau bapak dipanggil 'Pace', sedangkan ibu dipanggil 'Mace'.",
+        nodes: [
+            { id: "pp_kakek1", x: 140, y: 78,  roleHint: "Kakek (Pihak Ayah)", answer: "lukas" },
+            { id: "pp_nenek1", x: 300, y: 78,  roleHint: "Nenek (Pihak Ayah)", answer: "martha" },
+            { id: "pp_kakek2", x: 490, y: 78,  roleHint: "Kakek (Pihak Ibu)", answer: "yakob" },
+            { id: "pp_nenek2", x: 650, y: 78,  roleHint: "Nenek (Pihak Ibu)", answer: "sarah" },
+            { id: "pp_ayah",   x: 300, y: 228, roleHint: "Ayah (Pace)", answer: "frans" },
+            { id: "pp_ibu",    x: 490, y: 228, roleHint: "Ibu (Mace)", answer: "maria" },
+            { id: "pp_anak1",  x: 300, y: 376, roleHint: "Kakak Laki-laki", answer: "boaz" },
+            { id: "pp_anak2",  x: 490, y: 376, roleHint: "Adik Perempuan", answer: "yuliana" }
+        ],
+        unions: [
+            { spouse1: "pp_kakek1", spouse2: "pp_nenek1", children: ["pp_ayah"] },
+            { spouse1: "pp_kakek2", spouse2: "pp_nenek2", children: ["pp_ibu"] },
+            { spouse1: "pp_ayah", spouse2: "pp_ibu", children: ["pp_anak1", "pp_anak2"] }
+        ],
+        characters: [
+            { id: "lukas",   name: "Tete Lukas",  gender: "L", age: "elder", skin: "#AD6D42", shirt: "#92400e", hair: "curly", glasses: true },
+            { id: "martha",  name: "Nene Martha", gender: "P", age: "elder", skin: "#C07A4B", shirt: "#047857", hair: "curly" },
+            { id: "yakob",   name: "Tete Yakob",  gender: "L", age: "elder", skin: "#AD6D42", shirt: "#1e3a8a", hair: "curly" },
+            { id: "sarah",   name: "Nene Sarah",  gender: "P", age: "elder", skin: "#C07A4B", shirt: "#be185d", hair: "curly" },
+            { id: "frans",   name: "Pace Frans",  gender: "L", age: "adult", skin: "#AD6D42", shirt: "#d97706", hair: "curly", hat: "headband_papua" },
+            { id: "maria",   name: "Mace Maria",  gender: "P", age: "adult", skin: "#C07A4B", shirt: "#dc2626", hair: "curly", hat: "headband_papua" },
+            { id: "boaz",    name: "Boaz",        gender: "L", age: "child", skin: "#AD6D42", shirt: "#0284c7", hair: "curly" },
+            { id: "yuliana", name: "Yuliana",     gender: "P", age: "child", skin: "#C07A4B", shirt: "#9333ea", hair: "curly" }
+        ],
+        clues: [
+            "<strong>Pace Frans</strong> (tengah kiri) menikah dengan <strong>Mace Maria</strong> (tengah kanan).",
+            "<strong>Tete Lukas</strong> (paling kiri atas) dan istrinya <strong>Nene Martha</strong> adalah orang tua kandung dari Pace Frans.",
+            "<strong>Tete Yakob</strong> adalah ayah kandung dari Mace Maria, dan berada di sebelah kiri istrinya, <strong>Nene Sarah</strong>.",
+            "<strong>Boaz</strong> adalah kakak laki-laki yang berada di sebelah kiri adiknya, <strong>Yuliana</strong>."
+        ]
+    },
+
+    // ----------------------------------------------------------------------
+    // LEVEL 8: KELUARGA NUSANTARA BERSATU (BHINNEKA TUNGGAL IKA) - 8 ANGGOTA
+    // ----------------------------------------------------------------------
+    {
+        id: 8,
+        suku: "Nusantara Bersatu",
+        title: "Keluarga Besar Bhinneka",
+        subtitle: "Persaudaraan Lintas Suku: Jawa, Betawi, Ambon, & Dayak",
+        cultureIcon: "🇮🇩",
+        cultureTitle: "Tahukah Kamu? Bhinneka Tunggal Ika dalam Keluarga",
+        cultureFact: "Di Indonesia, banyak keluarga besar yang anggotanya berasal dari berbagai suku bangsa. Meski berbeda suku dan panggilan daerah, semuanya hidup rukun dan saling menyayangi!",
+        nodes: [
+            { id: "nb_kakek", x: 315, y: 78,  roleHint: "Kakek (Eyang)", answer: "wijaya" },
+            { id: "nb_nenek", x: 475, y: 78,  roleHint: "Nenek (Oma)", answer: "nyimas" },
+            { id: "nb_om",    x: 130, y: 228, roleHint: "Suami Tante (Om)", answer: "hendrik" },
+            { id: "nb_tante", x: 285, y: 228, roleHint: "Anak Pertama Eyang", answer: "laras" },
+            { id: "nb_ayah",  x: 505, y: 228, roleHint: "Anak Kedua Eyang", answer: "bima" },
+            { id: "nb_ibu",   x: 660, y: 228, roleHint: "Istri Ayah (Ibu)", answer: "dayang" },
+            { id: "nb_cucu1", x: 207, y: 376, roleHint: "Cucu (Anak Om & Tante)", answer: "kevin" },
+            { id: "nb_cucu2", x: 582, y: 376, roleHint: "Cucu (Anak Ayah & Ibu)", answer: "mentari" }
+        ],
+        unions: [
+            { spouse1: "nb_kakek", spouse2: "nb_nenek", children: ["nb_tante", "nb_ayah"] },
+            { spouse1: "nb_om", spouse2: "nb_tante", children: ["nb_cucu1"] },
+            { spouse1: "nb_ayah", spouse2: "nb_ibu", children: ["nb_cucu2"] }
+        ],
+        characters: [
+            { id: "wijaya",  name: "Eyang Wijaya", gender: "L", age: "elder", skin: "#E5A97C", shirt: "#78350f", hat: "blangkon", glasses: true },
+            { id: "nyimas",  name: "Oma Nyimas",   gender: "P", age: "elder", skin: "#F1C29B", shirt: "#047857", hair: "hijab", hijabColor: "#16a34a" },
+            { id: "hendrik", name: "Om Hendrik",   gender: "L", age: "adult", skin: "#C07A4B", shirt: "#0284c7", hair: "curly" },
+            { id: "laras",   name: "Tante Laras",  gender: "P", age: "adult", skin: "#F1C29B", shirt: "#be185d", hair: "bun" },
+            { id: "bima",    name: "Ayah Bima",    gender: "L", age: "adult", skin: "#E5A97C", shirt: "#b45309", hat: "peci" },
+            { id: "dayang",  name: "Ibu Dayang",   gender: "P", age: "adult", skin: "#F7D1B2", shirt: "#b91c1c", hair: "long", hat: "headband_dayak" },
+            { id: "kevin",   name: "Kevin",        gender: "L", age: "child", skin: "#D48E5C", shirt: "#2563eb", hair: "curly" },
+            { id: "mentari", name: "Mentari",      gender: "P", age: "child", skin: "#F7D1B2", shirt: "#d97706", hair: "pigtails" }
+        ],
+        clues: [
+            "<strong>Eyang Wijaya</strong> (kiri atas) menikah dengan <strong>Oma Nyimas</strong> (kanan atas).",
+            "Eyang Wijaya dan Oma Nyimas memiliki dua anak kandung: <strong>Tante Laras</strong> (tengah kiri) dan <strong>Ayah Bima</strong> (tengah kanan).",
+            "<strong>Om Hendrik</strong> berada di kotak paling kiri tengah dan menikah dengan Tante Laras.",
+            "<strong>Kevin</strong> adalah anak dari Om Hendrik dan Tante Laras.",
+            "<strong>Ibu Dayang</strong> menikah dengan Ayah Bima dan memiliki anak perempuan bernama <strong>Mentari</strong>."
+        ]
+    }
+];
+
+/* ==========================================================================
+   BAGIAN 4: DATA KAMUS SILSILAH & SAPAAN NUSANTARA
+   ========================================================================== */
+const KAMUS_DATA = {
+    istilah: [
+        { title: "👨‍👩‍👧‍👦 Keluarga Inti", desc: "Keluarga terdekat yang terdiri dari Ayah, Ibu, dan Anak-anak (Kakak serta Adik)." },
+        { title: "👴👵 Kakek & Nenek", desc: "Orang tua dari Ayah atau Ibu kita. Mereka berada di Generasi ke-1 (paling atas pada pohon silsilah)." },
+        { title: "🧔👩 Paman (Om) & Bibi (Tante)", desc: "Saudara laki-laki (Paman) atau saudara perempuan (Bibi) dari Ayah maupun Ibu kita." },
+        { title: "👦👧 Sepupu", desc: "Anak dari Paman dan Bibi kita. Sepupu berada satu generasi (sejajar) dengan kita di pohon silsilah." },
+        { title: "👶 Keponakan (Kemenakan)", desc: "Sebutan untuk anak dari kakak atau adik kita." },
+        { title: "💍 Menantu & Mertua", desc: "Menantu adalah suami atau istri dari anak kita. Sedangkan orang tua dari suami/istri disebut Mertua." }
+    ],
+    suku: [
+        { title: "🎭 Suku Jawa", desc: "Ayah: Bapak/Rama • Ibu: Ibu/Biyung • Kakek/Nenek: Eyang/Mbah • Kakak: Mas (L), Mbak (P)." },
+        { title: "🎋 Suku Sunda", desc: "Kakek: Aki • Nenek: Nini • Kakak Laki-laki: Akang/Aa • Kakak Perempuan: Teteh." },
+        { title: "🌺 Suku Bali", desc: "Ayah: Bapa/Ajik • Ibu: Meme/Biang • Urutan Anak: Wayan/Putu (ke-1), Made/Kadek (ke-2), Nyoman/Komang (ke-3), Ketut (ke-4)." },
+        { title: "🏠 Suku Minangkabau", desc: "Kakek: Inyiak • Nenek: Uwan • Ibu: Bundo/Mande • Paman (saudara Ibu): Mamak • Kakak: Uda (L), Uni (P)." },
+        { title: "🧣 Suku Batak", desc: "Kakek/Nenek: Opung • Ayah: Amang • Ibu: Inang • Paman (saudara Ibu): Tulang • Panggilan Anak: Ucok (L), Butet (P)." },
+        { title: "⛵ Suku Bugis & Makassar", desc: "Kakek: Puang/Lato • Ibu/Nenek: Indo • Kakak/Kehormatan: Daeng • Panggilan Anak: Baso (L), Besse (P)." },
+        { title: "🦜 Suku Papua & Maluku", desc: "Kakek: Tete • Nenek: Nene • Ayah/Bapak: Pace • Ibu: Mace." },
+        { title: "🛡️ Suku Dayak & Betawi", desc: "Dayak: Apai (Ayah), Indai (Ibu), Dayang (Putri). Betawi: Babe (Ayah), Enyak (Ibu), Engkong (Kakek), Nyai/Oma (Nenek)." }
+    ]
+};
+
+/* ==========================================================================
+   BAGIAN 5: STATE PERMAINAN & PENYIMPANAN LOKAL (OFFLINE STORAGE)
+   ========================================================================== */
+let currentLevelIndex = 0;
+let placements = {};         // { nodeId: charId }
+let selectedCharId = null;   // Untuk interaksi klik-lalu-tempatkan
+let checkedClues = {};       // { clueIdx: boolean }
+let completedLevels = [];
+
+// State Drag & Drop Kustom (Kompatibel Mouse & Layar Sentuh)
+let dragState = {
+    active: false,
+    charId: null,
+    fromNodeId: null
+};
+
+function loadProgress() {
+    try {
+        const saved = localStorage.getItem('silsilah_nusantara_done');
+        if (saved) {
+            completedLevels = JSON.parse(saved);
+        }
+    } catch (e) {
+        completedLevels = [];
+    }
+    updateMenuProgressText();
+}
+
+function saveProgress(levelId) {
+    if (!completedLevels.includes(levelId)) {
+        completedLevels.push(levelId);
+        try {
+            localStorage.setItem('silsilah_nusantara_done', JSON.stringify(completedLevels));
+        } catch (e) {}
+    }
+    updateMenuProgressText();
+}
+
+function resetAllProgress() {
+    SoundFX.click();
+    completedLevels = [];
+    try {
+        localStorage.removeItem('silsilah_nusantara_done');
+    } catch (e) {}
+    renderLevelCards();
+    updateMenuProgressText();
+    showToast("Progres permainan berhasil diatur ulang!");
+}
+
+function updateMenuProgressText() {
+    const el = document.getElementById('menu-progress-summary');
+    if (el) {
+        el.textContent = `Progres Selesai: ${completedLevels.length} / ${LEVELS.length} Level`;
+    }
+}
+
+/* ==========================================================================
+   BAGIAN 6: SKALA OTOMATIS RASIO TETAP 16:9 (1280 x 720)
+   ========================================================================== */
+function updateStageScale() {
+    const stage = document.getElementById('stage');
+    if (!stage) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const scale = Math.min(vw / 1280, vh / 720);
+    stage.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener('resize', updateStageScale);
+
+/* ==========================================================================
+   BAGIAN 7: NAVIGASI LAYAR & MODAL
+   ========================================================================== */
+function showScreen(screenId) {
+    SoundFX.click();
+    document.querySelectorAll('.screen').forEach(sc => sc.classList.remove('active'));
+    const target = document.getElementById(screenId);
+    if (target) target.classList.add('active');
+}
+
+function openLevelSelect() {
+    renderLevelCards();
+    showScreen('screen-levels');
+}
+
+function openModal(modalId) {
+    SoundFX.click();
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.add('active');
+}
+
+function closeModal(modalId) {
+    SoundFX.click();
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove('active');
+}
+
+let toastTimer = null;
+function showToast(msg, bgColor = '#1e293b') {
+    const banner = document.getElementById('toast-banner');
+    if (!banner) return;
+    banner.textContent = msg;
+    banner.style.backgroundColor = bgColor;
+    banner.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        banner.classList.remove('show');
+    }, 2600);
+}
+
+/* ==========================================================================
+   BAGIAN 8: RENDER MENU ILUSTRASI, KAMUS, & DAFTAR LEVEL
+   ========================================================================== */
+function renderMenuIllustration() {
+    const container = document.getElementById('menu-illustration');
+    if (!container) return;
+
+    const avAyah = createAvatarSVG({ gender: 'L', age: 'adult', skin: '#E5A97C', shirt: '#78350f', hat: 'blangkon', mustache: true });
+    const avIbu = createAvatarSVG({ gender: 'P', age: 'adult', skin: '#F1C29B', shirt: '#dc2626', hat: 'tengkuluk' });
+    const avAnak1 = createAvatarSVG({ gender: 'L', age: 'child', skin: '#AD6D42', shirt: '#d97706', hair: 'curly', hat: 'headband_papua' });
+    const avAnak2 = createAvatarSVG({ gender: 'P', age: 'child', skin: '#F1C29B', shirt: '#ec4899', hair: 'pigtails' });
+
+    container.innerHTML = `
+        <svg viewBox="0 0 460 280" width="100%" height="100%" style="position:absolute; inset:0;">
+            <line x1="155" y1="75" x2="305" y2="75" stroke="#8e562e" stroke-width="5"/>
+            <line x1="230" y1="75" x2="230" y2="145" stroke="#8e562e" stroke-width="5"/>
+            <line x1="145" y1="145" x2="315" y2="145" stroke="#8e562e" stroke-width="5"/>
+            <line x1="145" y1="145" x2="145" y2="195" stroke="#8e562e" stroke-width="5"/>
+            <line x1="315" y1="145" x2="315" y2="195" stroke="#8e562e" stroke-width="5"/>
+        </svg>
+        <div style="position:absolute; left:155px; top:75px; transform:translate(-50%,-50%); width:84px; height:84px; background:#fff; border:3px solid #8e562e; border-radius:16px; padding:4px; box-shadow:0 4px 0 #cdb28b;">
+            ${avAyah}
+        </div>
+        <div style="position:absolute; left:230px; top:75px; transform:translate(-50%,-50%); width:28px; height:28px; background:#fff; border:2px solid #e11d48; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">❤️</div>
+        <div style="position:absolute; left:305px; top:75px; transform:translate(-50%,-50%); width:84px; height:84px; background:#fff; border:3px solid #8e562e; border-radius:16px; padding:4px; box-shadow:0 4px 0 #cdb28b;">
+            ${avIbu}
+        </div>
+        <div style="position:absolute; left:145px; top:208px; transform:translate(-50%,-50%); width:80px; height:80px; background:#fff; border:3px solid #16a34a; border-radius:16px; padding:4px; box-shadow:0 4px 0 #86efac;">
+            ${avAnak1}
+        </div>
+        <div style="position:absolute; left:315px; top:208px; transform:translate(-50%,-50%); width:80px; height:80px; background:#fff; border:3px solid #16a34a; border-radius:16px; padding:4px; box-shadow:0 4px 0 #86efac;">
+            ${avAnak2}
+        </div>
+    `;
+}
+
+function switchKamusTab(tabKey) {
+    SoundFX.click();
+    document.getElementById('tab-btn-istilah').classList.toggle('active', tabKey === 'istilah');
+    document.getElementById('tab-btn-suku').classList.toggle('active', tabKey === 'suku');
+
+    const grid = document.getElementById('kamus-content-grid');
+    if (!grid) return;
+
+    const items = KAMUS_DATA[tabKey] || [];
+    grid.innerHTML = items.map(item => `
+        <div class="kamus-card">
+            <h4>${item.title}</h4>
+            <p>${item.desc}</p>
+        </div>
+    `).join('');
+}
+
+function renderLevelCards() {
+    const grid = document.getElementById('levels-grid-container');
+    if (!grid) return;
+
+    grid.innerHTML = LEVELS.map((lvl, idx) => {
+        const isDone = completedLevels.includes(lvl.id);
+        const sampleChars = lvl.characters.slice(0, 3);
+        const avatarsHTML = sampleChars.map(c => `
+            <div class="level-avatar-mini">${createAvatarSVG(c)}</div>
+        `).join('');
+
+        return `
+            <div class="level-card ${isDone ? 'completed' : ''}" onclick="startLevel(${idx})">
+                <div class="level-card-top">
+                    <span class="level-num-badge">Level ${lvl.id}</span>
+                    <span class="level-suku-tag">${lvl.suku.split(' ')[0]} ${lvl.suku.split(' ')[1] || ''}</span>
+                </div>
+                <div class="level-avatar-row">
+                    ${avatarsHTML}
+                </div>
+                <div class="level-card-info">
+                    <h3>${lvl.title}</h3>
+                    <p>${lvl.subtitle}</p>
+                </div>
+                <div class="level-card-footer">
+                    <span style="color: var(--wood-dark);">👥 ${lvl.characters.length} Anggota</span>
+                    <span style="color: ${isDone ? '#15803d' : '#d97706'};">
+                        ${isDone ? '⭐⭐⭐ Selesai' : '▶ Mainkan'}
+                    </span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+/* ==========================================================================
+   BAGIAN 9: LOGIKA INTI PERMAINAN POHON SILSILAH (GAMEPLAY)
+   ========================================================================== */
+function startLevel(idx) {
+    currentLevelIndex = idx;
+    placements = {};
+    selectedCharId = null;
+    checkedClues = {};
+
+    const lvl = LEVELS[currentLevelIndex];
+    applyTreeBoardBackground(lvl);
+    document.getElementById('game-suku-badge').textContent = lvl.suku;
+    document.getElementById('game-title-text').textContent = `Level ${lvl.id}: ${lvl.title}`;
+
+    renderTreeLines(lvl);
+    renderTreeNodes(lvl);
+    renderCluesList(lvl);
+    renderCharacterTray(lvl);
+    updatePlacedCounter();
+
+    showScreen('screen-game');
+}
+
+function applyTreeBoardBackground(lvl) {
+    const board = document.getElementById('tree-board');
+    if (!board) return;
+
+    const bgMap = {
+        'Suku Jawa': 'assets/jawa.jpeg',
+        'Suku Sunda': 'assets/sunda.jpeg',
+        'Suku Bali': 'assets/bali.jpeg',
+        'Suku Minangkabau': 'assets/minang.jpeg',
+        'Suku Batak': 'assets/batak.jpeg',
+        'Suku Bugis': 'assets/bugis.jpeg',
+        'Suku Papua': 'assets/papua.jpeg',
+        'Nusantara Bersatu': 'assets/nusantara.jpeg'
+    };
+
+    const matchedKey = Object.keys(bgMap).find(key => lvl.suku.includes(key));
+    const backgroundUrl = matchedKey ? bgMap[matchedKey] : 'assets/latar.jpeg';
+
+    board.style.backgroundImage = `url("${backgroundUrl}")`;
+    board.style.backgroundSize = 'cover';
+    board.style.backgroundPosition = 'center';
+    board.style.backgroundRepeat = 'no-repeat';
+}
+
+function resetCurrentLevel() {
+    SoundFX.remove();
+    placements = {};
+    selectedCharId = null;
+    checkedClues = {};
+    const lvl = LEVELS[currentLevelIndex];
+    renderTreeNodes(lvl);
+    renderCluesList(lvl);
+    renderCharacterTray(lvl);
+    updatePlacedCounter();
+    showToast("Papan silsilah telah dikosongkan.");
+}
+
+// Menggambar Garis Silsilah (Pernikahan & Keturunan) secara Otomatis & Presisi
+function renderTreeLines(lvl) {
+    const svg = document.getElementById('tree-lines-svg');
+    if (!svg) return;
+
+    const nodeMap = {};
+    lvl.nodes.forEach(n => { nodeMap[n.id] = n; });
+
+    let pathsHTML = '';
+
+    lvl.unions.forEach(u => {
+        const s1 = nodeMap[u.spouse1];
+        const s2 = u.spouse2 ? nodeMap[u.spouse2] : null;
+
+        let originX = s1.x;
+        let originY = s1.y;
+
+        // Jika pasangan suami-istri, gambar garis horizontal pernikahan
+        if (s1 && s2) {
+            pathsHTML += `<line x1="${s1.x}" y1="${s1.y}" x2="${s2.x}" y2="${s2.y}" stroke="#f7f0df" stroke-width="5" stroke-linecap="round"/>`;
+            originX = (s1.x + s2.x) / 2;
+            originY = (s1.y + s2.y) / 2;
+        }
+
+        // Jika memiliki anak keturunan, gambar garis cabang ke bawah
+        if (u.children && u.children.length > 0) {
+            const childNodes = u.children.map(cid => nodeMap[cid]).filter(Boolean);
+            const childTopY = childNodes[0].y;
+            const branchY = originY + (childTopY - originY) * 0.52;
+
+            // Garis vertikal turun dari tengah orang tua ke garis cabang
+            pathsHTML += `<line x1="${originX}" y1="${originY}" x2="${originX}" y2="${branchY}" stroke="#f7f0df" stroke-width="4.5" stroke-linecap="round"/>`;
+
+            // Garis horizontal penghubung semua anak + titik tengah orang tua
+            const allX = childNodes.map(c => c.x).concat([originX]);
+            const minX = Math.min(...allX);
+            const maxX = Math.max(...allX);
+
+            if (maxX > minX) {
+                pathsHTML += `<line x1="${minX}" y1="${branchY}" x2="${maxX}" y2="${branchY}" stroke="#f7f0df" stroke-width="4.5" stroke-linecap="round"/>`;
+            }
+
+            // Garis vertikal turun ke masing-masing kotak anak
+            childNodes.forEach(c => {
+                pathsHTML += `<line x1="${c.x}" y1="${branchY}" x2="${c.x}" y2="${c.y}" stroke="#f7f0df" stroke-width="4.5" stroke-linecap="round"/>`;
+            });
+        }
+    });
+
+    svg.innerHTML = pathsHTML;
+}
+
+// Merender Slot Kotak pada Pohon Silsilah + Lencana Hati Pernikahan
+function renderTreeNodes(lvl) {
+    const layer = document.getElementById('tree-nodes-layer');
+    if (!layer) return;
+
+    const nodeMap = {};
+    lvl.nodes.forEach(n => { nodeMap[n.id] = n; });
+
+    const charMap = {};
+    lvl.characters.forEach(c => { charMap[c.id] = c; });
+
+    let html = '';
+
+    // 1. Lencana Hati (❤️) di Tengah Pasangan Suami-Istri
+    lvl.unions.forEach(u => {
+        if (u.spouse1 && u.spouse2) {
+            const s1 = nodeMap[u.spouse1];
+            const s2 = nodeMap[u.spouse2];
+            const midX = (s1.x + s2.x) / 2;
+            const midY = (s1.y + s2.y) / 2;
+            html += `<div class="marriage-badge" style="left:${midX}px; top:${midY}px;">❤️</div>`;
+        }
+    });
+
+    // 2. Kotak Slot Anggota Keluarga
+    lvl.nodes.forEach(node => {
+        const placedCharId = placements[node.id];
+        const charObj = placedCharId ? charMap[placedCharId] : null;
+        const isTargetReady = (selectedCharId !== null);
+
+        if (charObj) {
+            html += `
+                <div class="tree-slot filled ${isTargetReady ? 'target-ready' : ''}"
+                     data-node-id="${node.id}"
+                     style="left:${node.x}px; top:${node.y}px;"
+                     onclick="handleSlotClick('${node.id}')"
+                     onmousedown="startDragFromSlot(event, '${node.id}', '${charObj.id}')"
+                     ontouchstart="startDragFromSlot(event, '${node.id}', '${charObj.id}')">
+                    <div class="slot-char-content">
+                        <button class="slot-remove-btn" title="Kembalikan ke baki" onclick="removeCharacterFromSlot(event, '${node.id}')">×</button>
+                        <div class="slot-avatar-wrap">${createAvatarSVG(charObj)}</div>
+                        <div class="slot-name-tag">${charObj.name}</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            html += `
+                <div class="tree-slot ${isTargetReady ? 'target-ready' : ''}"
+                     data-node-id="${node.id}"
+                     style="left:${node.x}px; top:${node.y}px;"
+                     onclick="handleSlotClick('${node.id}')">
+                    <div class="slot-empty-placeholder">
+                        <div class="slot-empty-icon">👤</div>
+                        <div class="slot-role-hint">${node.roleHint}</div>
+                    </div>
+                </div>
+            `;
+        }
+    });
+
+    layer.innerHTML = html;
+}
+
+// Merender Daftar Petunjuk Silsilah di Panel Kanan
+function renderCluesList(lvl) {
+    const container = document.getElementById('clues-list-container');
+    if (!container) return;
+
+    container.innerHTML = lvl.clues.map((clueText, i) => {
+        const isChecked = !!checkedClues[i];
+        return `
+            <div class="clue-item ${isChecked ? 'checked' : ''}" onclick="toggleClueCheck(${i})">
+                <div class="clue-check-box">✓</div>
+                <div class="clue-text">${i + 1}. ${clueText}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function toggleClueCheck(idx) {
+    SoundFX.checkClue();
+    checkedClues[idx] = !checkedClues[idx];
+    renderCluesList(LEVELS[currentLevelIndex]);
+}
+
+// Merender Kartu Karakter di Baki Bawah
+function renderCharacterTray(lvl) {
+    const tray = document.getElementById('character-tray');
+    if (!tray) return;
+
+    const placedIds = Object.values(placements);
+
+    tray.innerHTML = lvl.characters.map(c => {
+        const isPlaced = placedIds.includes(c.id);
+        const isSelected = (selectedCharId === c.id);
+        const genderLabel = c.gender === 'L' ? 'L' : 'P';
+
+        return `
+            <div class="char-card ${isPlaced ? 'placed' : ''} ${isSelected ? 'selected' : ''}"
+                 data-char-id="${c.id}"
+                 onclick="handleTrayCardClick('${c.id}')"
+                 onmousedown="startDragFromTray(event, '${c.id}')"
+                 ontouchstart="startDragFromTray(event, '${c.id}')">
+                <span class="char-gender-dot gender-${c.gender}" title="${c.gender === 'L' ? 'Laki-laki' : 'Perempuan'}">${genderLabel}</span>
+                <div class="char-avatar-box">${createAvatarSVG(c)}</div>
+                <div class="char-card-name">${c.name}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updatePlacedCounter() {
+    const lvl = LEVELS[currentLevelIndex];
+    const placedCount = Object.keys(placements).length;
+    const totalCount = lvl.nodes.length;
+    const el = document.getElementById('placed-counter-text');
+    if (el) {
+        el.textContent = `Terpasang: ${placedCount} / ${totalCount} Anggota`;
+    }
+}
+
+/* ==========================================================================
+   BAGIAN 10: INTERAKSI KLIK & DRAG-AND-DROP (KOMPATIBEL MOUSE & LAYAR SENTUH)
+   ========================================================================== */
+function handleTrayCardClick(charId) {
+    const placedIds = Object.values(placements);
+    if (placedIds.includes(charId)) return;
+
+    SoundFX.pickup();
+    if (selectedCharId === charId) {
+        selectedCharId = null;
+    } else {
+        selectedCharId = charId;
+    }
+
+    const lvl = LEVELS[currentLevelIndex];
+    renderCharacterTray(lvl);
+    renderTreeNodes(lvl);
+}
+
+function handleSlotClick(nodeId) {
+    const lvl = LEVELS[currentLevelIndex];
+
+    // Jika ada karakter dari baki yang sedang dipilih, tempatkan ke slot ini
+    if (selectedCharId) {
+        placeCharacterInNode(selectedCharId, nodeId);
+        selectedCharId = null;
+        renderCharacterTray(lvl);
+        renderTreeNodes(lvl);
+        updatePlacedCounter();
+        checkAutoComplete();
+        return;
+    }
+
+    // Jika tidak ada yang dipilih dan slot sudah terisi, jadikan karakter di slot ini terpilih untuk dipindah
+    if (placements[nodeId]) {
+        const charId = placements[nodeId];
+        delete placements[nodeId];
+        selectedCharId = charId;
+        SoundFX.pickup();
+        renderCharacterTray(lvl);
+        renderTreeNodes(lvl);
+        updatePlacedCounter();
+    }
+}
+
+function removeCharacterFromSlot(event, nodeId) {
+    event.stopPropagation();
+    if (placements[nodeId]) {
+        delete placements[nodeId];
+        SoundFX.remove();
+        const lvl = LEVELS[currentLevelIndex];
+        renderCharacterTray(lvl);
+        renderTreeNodes(lvl);
+        updatePlacedCounter();
+    }
+}
+
+function placeCharacterInNode(charId, targetNodeId, fromNodeId = null) {
+    // Hapus posisi lama jika karakter sudah ada di slot lain
+    Object.keys(placements).forEach(nid => {
+        if (placements[nid] === charId) {
+            delete placements[nid];
+        }
+    });
+
+    // Jika target slot sudah berisi karakter lain dan berasal dari slot pohon, tukar posisinya
+    if (placements[targetNodeId] && fromNodeId) {
+        placements[fromNodeId] = placements[targetNodeId];
+    }
+
+    placements[targetNodeId] = charId;
+    SoundFX.place();
+}
+
+// Sistem Drag & Drop Pointer Kustom agar Mulus di Semua Resolusi 16:9
+let dragStartPos = { x: 0, y: 0 };
+let isDraggingMoved = false;
+
+function getClientCoords(e) {
+    if (e.touches && e.touches.length > 0) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    if (e.changedTouches && e.changedTouches.length > 0) {
+        return { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
+}
+
+function startDragFromTray(e, charId) {
+    const placedIds = Object.values(placements);
+    if (placedIds.includes(charId)) return;
+
+    const coords = getClientCoords(e);
+    dragStartPos = coords;
+    isDraggingMoved = false;
+    dragState = { active: true, charId: charId, fromNodeId: null };
+}
+
+function startDragFromSlot(e, nodeId, charId) {
+    if (e.target && e.target.classList.contains('slot-remove-btn')) return;
+    const coords = getClientCoords(e);
+    dragStartPos = coords;
+    isDraggingMoved = false;
+    dragState = { active: true, charId: charId, fromNodeId: nodeId };
+}
+
+window.addEventListener('mousemove', handleGlobalPointerMove, { passive: false });
+window.addEventListener('touchmove', handleGlobalPointerMove, { passive: false });
+
+function handleGlobalPointerMove(e) {
+    if (!dragState.active) return;
+
+    const coords = getClientCoords(e);
+    const dist = Math.hypot(coords.x - dragStartPos.x, coords.y - dragStartPos.y);
+
+    if (!isDraggingMoved && dist > 8) {
+        isDraggingMoved = true;
+        SoundFX.pickup();
+        showDragGhost(dragState.charId);
+    }
+
+    if (isDraggingMoved) {
+        if (e.cancelable) e.preventDefault();
+        const ghost = document.getElementById('drag-ghost');
+        if (ghost) {
+            ghost.style.left = `${coords.x}px`;
+            ghost.style.top = `${coords.y}px`;
+        }
+
+        // Highlight slot di bawah kursor
+        document.querySelectorAll('.tree-slot').forEach(slot => slot.classList.remove('drag-over'));
+        const elUnder = document.elementFromPoint(coords.x, coords.y);
+        const slotEl = elUnder ? elUnder.closest('.tree-slot') : null;
+        if (slotEl) {
+            slotEl.classList.add('drag-over');
+        }
+    }
+}
+
+window.addEventListener('mouseup', handleGlobalPointerUp);
+window.addEventListener('touchend', handleGlobalPointerUp);
+
+function handleGlobalPointerUp(e) {
+    if (!dragState.active) return;
+
+    if (isDraggingMoved) {
+        const coords = getClientCoords(e);
+        const ghost = document.getElementById('drag-ghost');
+        if (ghost) ghost.style.display = 'none';
+
+        document.querySelectorAll('.tree-slot').forEach(slot => slot.classList.remove('drag-over'));
+
+        const elUnder = document.elementFromPoint(coords.x, coords.y);
+        const slotEl = elUnder ? elUnder.closest('.tree-slot') : null;
+
+        const lvl = LEVELS[currentLevelIndex];
+
+        if (slotEl) {
+            const targetNodeId = slotEl.getAttribute('data-node-id');
+            placeCharacterInNode(dragState.charId, targetNodeId, dragState.fromNodeId);
+            selectedCharId = null;
+            renderCharacterTray(lvl);
+            renderTreeNodes(lvl);
+            updatePlacedCounter();
+            checkAutoComplete();
+        } else if (dragState.fromNodeId) {
+            // Jika diseret keluar dari slot ke area kosong/baki, kembalikan ke baki
+            delete placements[dragState.fromNodeId];
+            SoundFX.remove();
+            renderCharacterTray(lvl);
+            renderTreeNodes(lvl);
+            updatePlacedCounter();
+        }
+    }
+
+    dragState = { active: false, charId: null, fromNodeId: null };
+    isDraggingMoved = false;
+}
+
+function showDragGhost(charId) {
+    const lvl = LEVELS[currentLevelIndex];
+    const charObj = lvl.characters.find(c => c.id === charId);
+    if (!charObj) return;
+
+    const ghost = document.getElementById('drag-ghost');
+    if (!ghost) return;
+
+    ghost.innerHTML = `
+        <div class="slot-avatar-wrap">${createAvatarSVG(charObj)}</div>
+        <div class="slot-name-tag">${charObj.name}</div>
+    `;
+    ghost.style.display = 'flex';
+}
+
+/* ==========================================================================
+   BAGIAN 11: PEMERIKSAAN JAWABAN & FITUR BANTUAN (HINT)
+   ========================================================================== */
+function checkAutoComplete() {
+    const lvl = LEVELS[currentLevelIndex];
+    if (Object.keys(placements).length === lvl.nodes.length) {
+        // Semua kotak sudah terisi, periksa otomatis
+        setTimeout(() => evaluateBoard(true), 220);
+    }
+}
+
+function checkSolutionManual() {
+    const lvl = LEVELS[currentLevelIndex];
+    if (Object.keys(placements).length < lvl.nodes.length) {
+        SoundFX.error();
+        showToast("Masih ada kotak silsilah yang kosong! Pasang semua anggota keluarga dulu ya.", "#b45309");
+        evaluateBoard(false);
+        return;
+    }
+    evaluateBoard(false);
+}
+
+function evaluateBoard(isAutoTrigger) {
+    const lvl = LEVELS[currentLevelIndex];
+    let allCorrect = true;
+    let wrongCount = 0;
+
+    lvl.nodes.forEach(node => {
+        const slotEl = document.querySelector(`.tree-slot[data-node-id="${node.id}"]`);
+        const placed = placements[node.id];
+
+        if (!placed) {
+            allCorrect = false;
+            return;
+        }
+
+        if (placed === node.answer) {
+            if (slotEl) {
+                slotEl.classList.remove('wrong-shake');
+                slotEl.classList.add('correct-flash');
+                setTimeout(() => slotEl.classList.remove('correct-flash'), 1000);
+            }
+        } else {
+            allCorrect = false;
+            wrongCount++;
+            if (slotEl) {
+                slotEl.classList.remove('correct-flash');
+                slotEl.classList.add('wrong-shake');
+                setTimeout(() => slotEl.classList.remove('wrong-shake'), 550);
+            }
+        }
+    });
+
+    if (allCorrect) {
+        handleLevelWin();
+    } else {
+        SoundFX.error();
+        if (wrongCount > 0) {
+            showToast(`Ada ${wrongCount} posisi yang belum tepat. Yuk baca lagi petunjuknya!`, "#dc2626");
+        }
+    }
+}
+
+function useHint() {
+    const lvl = LEVELS[currentLevelIndex];
+
+    // Cari slot pertama yang masih kosong atau salah penempatannya
+    const targetNode = lvl.nodes.find(n => placements[n.id] !== n.answer);
+    if (!targetNode) {
+        showToast("Semua anggota keluarga sudah berada di tempat yang benar!", "#15803d");
+        return;
+    }
+
+    SoundFX.hint();
+    placeCharacterInNode(targetNode.answer, targetNode.id);
+    selectedCharId = null;
+
+    renderCharacterTray(lvl);
+    renderTreeNodes(lvl);
+    updatePlacedCounter();
+
+    const charObj = lvl.characters.find(c => c.id === targetNode.answer);
+    showToast(`💡 Bantuan: ${charObj ? charObj.name : ''} ditempatkan di kotak yang tepat!`, "#0284c7");
+
+    // Beri efek kilau hijau pada kotak yang dibantu
+    const slotEl = document.querySelector(`.tree-slot[data-node-id="${targetNode.id}"]`);
+    if (slotEl) {
+        slotEl.classList.add('correct-flash');
+        setTimeout(() => slotEl.classList.remove('correct-flash'), 1200);
+    }
+
+    checkAutoComplete();
+}
+
+function handleLevelWin() {
+    SoundFX.win();
+    const lvl = LEVELS[currentLevelIndex];
+    saveProgress(lvl.id);
+
+    document.getElementById('win-level-name').textContent = `Level ${lvl.id}: ${lvl.title} (${lvl.suku})`;
+    document.getElementById('win-culture-icon').textContent = lvl.cultureIcon;
+    document.getElementById('win-culture-title').textContent = lvl.cultureTitle;
+    document.getElementById('win-culture-desc').textContent = lvl.cultureFact;
+
+    const nextBtn = document.getElementById('btn-next-level');
+    if (currentLevelIndex < LEVELS.length - 1) {
+        nextBtn.textContent = "Level Berikutnya ➡";
+        nextBtn.onclick = goToNextLevel;
+    } else {
+        nextBtn.textContent = "🏆 Tamat! Kembali ke Daftar Level";
+        nextBtn.onclick = () => {
+            closeModal('modal-win');
+            openLevelSelect();
+        };
+    }
+
+    setTimeout(() => {
+        openModal('modal-win');
+    }, 350);
+}
+
+function goToNextLevel() {
+    closeModal('modal-win');
+    if (currentLevelIndex < LEVELS.length - 1) {
+        startLevel(currentLevelIndex + 1);
+    } else {
+        openLevelSelect();
+    }
+}
+
+/* ==========================================================================
+   BAGIAN 12: INISIALISASI SAAT HALAMAN DIMUAT
+   ========================================================================== */
+window.onload = function () {
+    updateStageScale();
+    loadProgress();
+    renderMenuIllustration();
+    switchKamusTab('istilah');
+    renderLevelCards();
+};
+</script>
+</body>
+</html>
